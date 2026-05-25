@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天想去哪裡旅行呢？ | 尋找你的命定旅程</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        japan: {
+                            gold: '#D4AF37',
+                            indigo: '#1a1c2e',
+                            sakura: '#FFB7C5'
+                        },
+                        germany: {
+                            terracotta: '#C05C46',
+                            emerald: '#1b3b32',
+                            amber: '#FFBF00'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        /* Gradient animations */
+        @keyframes wave {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            50% { transform: translateY(-10px) scaleY(1.02); }
+        }
+        .animate-wave {
+            animation: wave 8s ease-in-out infinite;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.25; transform: scale(1.05); }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 12s ease-in-out infinite;
+        }
+        /* Split transition curves */
+        .split-panel {
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        /* Particle styling */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatUp 15s infinite linear;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100%) translateX(0); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-10%) translateX(50px); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 flex flex-col min-h-screen relative select-none">
+
+    <script>
+        // Web Audio API ambient sounds for true immersion
+        let audioCtx = null;
+        let isMuted = true;
+        let ambientOscJapan = null;
+        let ambientOscGermany = null;
+        let volumeJapan = null;
+        let volumeGermany = null;
+
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Japan ambient (Low peaceful pad + soft drone)
+            ambientOscJapan = audioCtx.createOscillator();
+            let filterJapan = audioCtx.createBiquadFilter();
+            volumeJapan = audioCtx.createGain();
+            
+            ambientOscJapan.type = 'sine';
+            ambientOscJapan.frequency.setValueAtTime(146.83, audioCtx.currentTime); // D3 chord
+            filterJapan.type = 'lowpass';
+            filterJapan.frequency.setValueAtTime(400, audioCtx.currentTime);
+            volumeJapan.gain.setValueAtTime(0, audioCtx.currentTime); // Muted initially
+            
+            ambientOscJapan.connect(filterJapan);
+            filterJapan.connect(volumeJapan);
+            volumeJapan.connect(audioCtx.destination);
+            ambientOscJapan.start();
+
+            // Germany ambient (Warm classical-like pipe chord)
+            ambientOscGermany = audioCtx.createOscillator();
+            let filterGermany = audioCtx.createBiquadFilter();
+            volumeGermany = audioCtx.createGain();
+            
+            ambientOscGermany.type = 'triangle';
+            ambientOscGermany.frequency.setValueAtTime(164.81, audioCtx.currentTime); // E3 chord
+            filterGermany.type = 'lowpass';
+            filterGermany.frequency.setValueAtTime(300, audioCtx.currentTime);
+            volumeGermany.gain.setValueAtTime(0, audioCtx.currentTime); // Muted initially
+            
+            ambientOscGermany.connect(filterGermany);
+            filterGermany.connect(volumeGermany);
+            volumeGermany.connect(audioCtx.destination);
+            ambientOscGermany.start();
+
+            // Play very subtle soft random chimes on hover to emulate breeze
+            setupWindChime();
+        }
+
+        function setupWindChime() {
+            setInterval(() => {
+                if (isMuted || !audioCtx) return;
+                // If hover is on Japan (class contains active-japan)
+                const currentHover = document.body.dataset.hover;
+                if (currentHover === 'japan' && Math.random() > 0.4) {
+                    playChime([293.66, 329.63, 392.00, 440.00, 587.33], 0.05, 'sine'); // Pentatonic (D, E, G, A, D)
+                } else if (currentHover === 'germany' && Math.random() > 0.4) {
+                    playChime([261.63, 329.63, 392.00, 523.25], 0.03, 'triangle'); // Major chord (C, E, G, C)
+                }
+            }, 1200);
+        }
+
+        function playChime(frequencies, maxVolume, type) {
+            try {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = type;
+                let freq = frequencies[Math.floor(Math.random() * frequencies.length)];
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(maxVolume, audioCtx.currentTime + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.5);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 3);
+            } catch(e) {}
+        }
+
+        function toggleAudio() {
+            if (!audioCtx) {
+                initAudio();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            isMuted = !isMuted;
+            const audioBtn = document.getElementById('audioBtn');
+            const audioIcon = document.getElementById('audioIcon');
+            const audioText = document.getElementById('audioText');
+            
+            if (isMuted) {
+                audioIcon.className = 'fa-solid fa-volume-xmark text-rose-400';
+                audioText.innerText = '靜音';
+                fadeVolume(volumeJapan, 0);
+                fadeVolume(volumeGermany, 0);
+            } else {
+                audioIcon.className = 'fa-solid fa-volume-high text-emerald-400 animate-pulse';
+                audioText.innerText = '音樂已開啟';
+                // Adjust volume based on current hover status
+                const currentHover = document.body.dataset.hover;
+                updateVolumeForHoverState(currentHover);
+            }
+        }
+
+        function fadeVolume(gainNode, targetVal) {
+            if (!gainNode || !audioCtx) return;
+            gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(targetVal, audioCtx.currentTime + 1.0);
+        }
+
+        function updateVolumeForHoverState(state) {
+            if (isMuted || !audioCtx) return;
+            if (state === 'japan') {
+                fadeVolume(volumeJapan, 0.12);
+                fadeVolume(volumeGermany, 0.01);
+            } else if (state === 'germany') {
+                fadeVolume(volumeJapan, 0.01);
+                fadeVolume(volumeGermany, 0.08);
+            } else {
+                fadeVolume(volumeJapan, 0.05);
+                fadeVolume(volumeGermany, 0.03);
+            }
+        }
+    </script>
+
+    <!-- Floating Header -->
+    <header class="absolute top-0 left-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-gradient-to-b from-slate-950/80 to-transparent backdrop-blur-sm md:backdrop-blur-none md:bg-none">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 flex items-center justify-center shadow-lg shadow-rose-500/20">
+                <i class="fa-solid fa-compass text-white text-lg animate-spin" style="animation-duration: 20s;"></i>
+            </div>
+            <div>
+                <span class="font-extrabold text-lg tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-rose-300 to-indigo-300">WANDERLUST</span>
+                <span class="block text-[9px] tracking-widest text-slate-400 uppercase">Interactive Escape</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <!-- Audio Toggle Widget -->
+            <button onclick="toggleAudio()" id="audioBtn" class="flex items-center gap-2 bg-slate-900/80 hover:bg-slate-800 border border-slate-700/50 px-3.5 py-1.5 rounded-full transition-all text-xs cursor-pointer active:scale-95 shadow-md shadow-black/10">
+                <i id="audioIcon" class="fa-solid fa-volume-xmark text-rose-400 transition-colors"></i>
+                <span id="audioText" class="text-slate-300 font-medium">啟用音效</span>
+            </button>
+            <button onclick="openRecommender()" class="hidden md:flex items-center gap-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-3.5 py-1.5 rounded-full transition-all text-xs text-amber-300 cursor-pointer">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>幫我決定</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Center Interactive Floating Core -->
+    <div id="centralTitle" class="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-[15%] z-40 text-center w-full max-w-lg px-6 pointer-events-none transition-all duration-700">
+        <div class="inline-block bg-slate-950/40 backdrop-blur-md border border-white/5 py-3 px-6 rounded-3xl shadow-2xl">
+            <span class="text-xs font-bold uppercase tracking-[0.25em] text-amber-400/90 block mb-1">Destinations of the Soul</span>
+            <h1 class="text-3xl md:text-4xl font-black text-white tracking-tight leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                今天想去哪裡旅行呢？
+            </h1>
+            <p class="text-slate-300 text-xs md:text-sm mt-2 font-light tracking-wide opacity-90">
+                靜謐無瑕的東方富士，或是充滿人文浪漫的歐洲古鎮？
+            </p>
+        </div>
+    </div>
+
+    <!-- Split Layout Area -->
+    <main class="flex-1 flex flex-col md:flex-row w-full h-screen overflow-hidden relative">
+        
+        <!-- JAPAN SIDE: 河口湖 -->
+        <div id="panelJapan" 
+             onmouseenter="handleHover('japan')" 
+             onmouseleave="handleLeave()"
+             onclick="handleMobileTap('japan')"
+             class="split-panel flex-1 relative flex items-center justify-center p-6 md:p-12 overflow-hidden bg-gradient-to-br from-[#0c0d1c] via-[#14162e] to-[#25152b] border-b md:border-b-0 md:border-r border-slate-800/30 group cursor-pointer">
+            
+            <!-- Beautiful dynamic SVG background of Japan/Fuji -->
+            <div class="absolute inset-0 z-0 transition-transform duration-[2000ms] group-hover:scale-105 pointer-events-none">
+                <!-- Glowing red sun of Japan -->
+                <div class="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-rose-600/20 blur-2xl group-hover:bg-rose-500/30 transition-all duration-1000"></div>
+                <!-- Mt. Fuji Landscape Minimal SVG Overlay -->
+                <svg class="absolute bottom-0 left-0 w-full h-[65%] opacity-20 group-hover:opacity-30 transition-all duration-1000" viewBox="0 0 1000 500" preserveAspectRatio="none">
+                    <!-- Snowcap peak -->
+                    <polygon points="500,100 380,350 620,350" fill="#f8fafc" />
+                    <!-- Mountain body -->
+                    <polygon points="500,100 200,500 800,500" fill="#2d3359" opacity="0.9" />
+                    <polygon points="500,100 380,350 620,350" fill="#e2e8f0" opacity="0.8" />
+                    <!-- Water ripples -->
+                    <path d="M 100 460 Q 300 450 500 460 T 900 460" fill="none" stroke="#6366f1" stroke-width="2" />
+                    <path d="M 50 480 Q 250 470 450 480 T 950 480" fill="none" stroke="#818cf8" stroke-width="1.5" opacity="0.6" />
+                </svg>
+                <!-- Floating clouds -->
+                <div class="absolute top-[30%] left-[10%] w-32 h-6 bg-white/5 rounded-full blur-sm animate-wave"></div>
+                <div class="absolute top-[45%] right-[15%] w-44 h-8 bg-white/5 rounded-full blur-sm animate-wave" style="animation-delay: -3s;"></div>
+            </div>
+
+            <!-- Glowing Grid Overlay -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#090a14_100%)] opacity-70 z-0"></div>
+
+            <!-- Content Container -->
+            <div class="relative z-10 max-w-md text-center md:text-left flex flex-col items-center md:items-start transition-all duration-500 transform group-hover:translate-y-[-10px] md:group-hover:translate-x-[15px]">
+                
+                <!-- Tag -->
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-semibold mb-4 tracking-wider">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>
+                    <span>富士五湖之首</span>
+                </div>
+
+                <!-- Title -->
+                <h2 class="text-4xl md:text-6xl font-black text-white tracking-wide flex flex-col md:flex-row items-center md:items-baseline gap-1 md:gap-3 drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                    <span>河口湖</span>
+                    <span class="text-base md:text-lg font-light tracking-widest text-japan-sakura uppercase">Kawaguchiko</span>
+                </h2>
+
+                <!-- Sub-intro -->
+                <p class="text-slate-300 text-sm mt-4 leading-relaxed font-light text-center md:text-left">
+                    明鏡般的湖面倒映著白雪皚皚的富士山頂。春櫻、夏薰、秋楓、冬雪，四季皆是此生必訪的極致和風詩篇。
+                </p>
+
+                <!-- Travel Features grid -->
+                <div class="grid grid-cols-2 gap-3 w-full mt-6 text-xs text-slate-300">
+                    <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+                        <i class="fa-solid fa-mountain text-rose-400 text-sm"></i>
+                        <span>富士絕景</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+                        <i class="fa-solid fa-hot-tub-person text-rose-400 text-sm"></i>
+                        <span>溫泉療癒</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+                        <i class="fa-solid fa-tree text-rose-400 text-sm"></i>
+                        <span>紅葉步道</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+                        <i class="fa-solid fa-leaf text-rose-400 text-sm"></i>
+                        <span>抹茶文化</span>
+                    </div>
+                </div>
+
+                <!-- Hyperlink Call to Action (kawaguchiko) -->
+                <a href="/kawaguchiko.html" 
+                   class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500 to-indigo-600 hover:from-rose-400 hover:to-indigo-500 text-white font-bold py-3.5 px-8 rounded-full mt-8 shadow-lg shadow-rose-900/40 hover:shadow-rose-500/30 transition-all duration-300 text-sm tracking-widest uppercase transform group-hover:scale-105 active:scale-95 group/btn">
+                    <span>即刻探索河口湖</span>
+                    <i class="fa-solid fa-arrow-right text-xs group-hover/btn:translate-x-1 transition-transform"></i>
+                </a>
+
+                <!-- Extra destination metadata inside card -->
+                <div class="mt-8 text-[11px] text-slate-400 flex items-center gap-4 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 東京出發約 2hr</span>
+                    <span><i class="fa-regular fa-compass mr-1"></i> 日本・山梨縣</span>
+                </div>
+            </div>
+
+            <!-- Soft edge fog overlay -->
+            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#0c0d1c] to-transparent z-10 pointer-events-none"></div>
+        </div>
+
+        <!-- GERMANY SIDE: 萊昂貝格 -->
+        <div id="panelGermany" 
+             onmouseenter="handleHover('germany')" 
+             onmouseleave="handleLeave()"
+             onclick="handleMobileTap('germany')"
+             class="split-panel flex-1 relative flex items-center justify-center p-6 md:p-12 overflow-hidden bg-gradient-to-br from-[#0e1713] via-[#14261e] to-[#241a0d] border-t md:border-t-0 border-slate-800/30 group cursor-pointer">
+            
+            <!-- Beautiful dynamic SVG background of Germany/European Renaissance -->
+            <div class="absolute inset-0 z-0 transition-transform duration-[2000ms] group-hover:scale-105 pointer-events-none">
+                <!-- Glowing sun of Germany -->
+                <div class="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-amber-600/10 blur-2xl group-hover:bg-amber-500/25 transition-all duration-1000"></div>
+                <!-- Renaissance Castle / Garden SVG Overlay -->
+                <svg class="absolute bottom-0 right-0 w-full h-[65%] opacity-15 group-hover:opacity-25 transition-all duration-1000" viewBox="0 0 1000 500" preserveAspectRatio="none">
+                    <!-- Castle silhouette -->
+                    <rect x="150" y="250" width="120" height="250" fill="#2d3a31" />
+                    <polygon points="150,250 210,120 270,250" fill="#1b291f" />
+                    <rect x="730" y="200" width="150" height="300" fill="#25352b" />
+                    <polygon points="730,200 805,80 880,200" fill="#17241c" />
+                    <!-- Dome tower -->
+                    <rect x="420" y="180" width="160" height="320" fill="#36493c" />
+                    <path d="M 420 180 Q 500 80 580 180 Z" fill="#1e2e23" />
+                    <!-- Symmetric garden pattern lines in foreground -->
+                    <path d="M 50 490 L 950 490 M 150 470 L 850 470 M 250 450 L 750 450" stroke="#ffd700" stroke-width="1.5" opacity="0.3" />
+                </svg>
+                <!-- Floating geometric elements / leaves -->
+                <div class="absolute top-[25%] right-[10%] w-24 h-24 border border-white/5 rounded-full blur-[1px] animate-pulse-slow"></div>
+                <div class="absolute bottom-[20%] left-[5%] w-32 h-32 border border-white/5 rounded-full blur-[1px] animate-pulse-slow" style="animation-delay: -5s;"></div>
+            </div>
+
+            <!-- Glowing Grid Overlay -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#080d0a_100%)] opacity-70 z-0"></div>
+
+            <!-- Content Container -->
+            <div class="relative z-10 max-w-md text-center md:text-left flex flex-col items-center md:items-start transition-all duration-500 transform group-hover:translate-y-[-10px] md:group-hover:translate-x-[-15px]">
+                
+                <!-- Tag -->
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold mb-4 tracking-wider">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>唯一完整文藝復興橘園</span>
+                </div>
+
+                <!-- Title -->
+                <h2 class="text-4xl md:text-6xl font-black text-white tracking-wide flex flex-col md:flex-row items-center md:items-baseline gap-1 md:gap-3 drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                    <span>萊昂貝格</span>
+                    <span class="text-base md:text-lg font-light tracking-widest text-germany-amber uppercase">Leonberg</span>
+                </h2>
+
+                <!-- Sub-intro -->
+                <p class="text-slate-300 text-sm mt-4 leading-relaxed font-light text-center md:text-left">
+                    探訪德國巴登-符騰堡邦的文藝復興瑰寶。擁有南德唯一的文藝復興梯田「橘園花園」，漫步木桁架中世紀建築小街。
+                </p>
+
+                <!-- Travel Features grid -->
+                <div class="grid grid-cols-2 gap-3 w-full mt-6 text-xs text-slate-300">
+                    <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+                        <i class="fa-solid fa-pagelines text-emerald-400 text-sm"></i>
+                        <span>橘園宮廷花園</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+                        <i class="fa-solid fa-house-chimney text-emerald-400 text-sm"></i>
+                        <span>半木結構德式小屋</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+                        <i class="fa-solid fa-dog text-emerald-400 text-sm"></i>
+                        <span>萊昂貝格犬發源地</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+                        <i class="fa-solid fa-landmark text-emerald-400 text-sm"></i>
+                        <span>黑森林門戶歷史</span>
+                    </div>
+                </div>
+
+                <!-- Hyperlink Call to Action (leonberg) -->
+                <a href="/leonberg.html" 
+                   class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-amber-600 hover:from-emerald-400 hover:to-amber-500 text-white font-bold py-3.5 px-8 rounded-full mt-8 shadow-lg shadow-emerald-900/40 hover:shadow-emerald-500/30 transition-all duration-300 text-sm tracking-widest uppercase transform group-hover:scale-105 active:scale-95 group/btn">
+                    <span>走進萊昂貝格</span>
+                    <i class="fa-solid fa-arrow-right text-xs group-hover/btn:translate-x-1 transition-transform"></i>
+                </a>
+
+                <!-- Extra destination metadata inside card -->
+                <div class="mt-8 text-[11px] text-slate-400 flex items-center gap-4 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 斯圖加特出發約 20min</span>
+                    <span><i class="fa-regular fa-compass mr-1"></i> 德國・巴登-符騰堡邦</span>
+                </div>
+            </div>
+
+            <!-- Soft edge fog overlay -->
+            <div class="absolute bottom-0 right-0 w-full h-24 bg-gradient-to-t from-[#0e1713] to-transparent z-10 pointer-events-none"></div>
+        </div>
+
+    </main>
+
+    <!-- Floating Bottom Bar (Recommender Trigger) -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <button onclick="openRecommender()" class="flex items-center gap-2 bg-slate-900/90 hover:bg-slate-800/100 border border-slate-700/60 px-6 py-3 rounded-full text-slate-200 transition-all hover:border-amber-400 hover:text-white cursor-pointer shadow-xl backdrop-blur-md active:scale-95">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-400 animate-pulse"></i>
+            <span class="text-xs font-semibold tracking-wider">測測你的今天命定旅行地？</span>
+        </button>
+    </div>
+
+    <!-- AI Recommender Modal Overlay -->
+    <div id="recommenderModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-500">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 md:p-8 w-full max-w-md relative shadow-2xl transform scale-95 transition-all duration-500" id="recommenderContent">
+            <!-- Close button -->
+            <button onclick="closeRecommender()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors cursor-pointer w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Quiz Content Container -->
+            <div id="quizForm">
+                <div class="text-center mb-6">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Travel DNA test</span>
+                    <h3 class="text-xl font-bold text-white mt-1">選出今天最觸動你的情境</h3>
+                </div>
+
+                <!-- Steps Progress dots -->
+                <div class="flex justify-center gap-2 mb-6">
+                    <div id="dot1" class="w-3 h-3 rounded-full bg-amber-400 transition-colors"></div>
+                    <div id="dot2" class="w-3 h-3 rounded-full bg-slate-700 transition-colors"></div>
+                    <div id="dot3" class="w-3 h-3 rounded-full bg-slate-700 transition-colors"></div>
+                </div>
+
+                <!-- Questions -->
+                <!-- Q1 -->
+                <div id="q1" class="space-y-3 transition-opacity duration-300">
+                    <p class="text-sm font-semibold text-slate-300 mb-2 text-center">1. 當你閉上雙眼，最想聽到哪種聲音？</p>
+                    <button onclick="answerQuestion(1, 'A')" class="w-full text-left bg-slate-800/50 hover:bg-indigo-950/50 hover:border-indigo-500/50 border border-slate-700/50 p-4 rounded-2xl transition-all cursor-pointer">
+                        <div class="font-semibold text-slate-200 text-sm">A. 輕風拂過水面的細浪聲，與鳥鳴禪意</div>
+                    </button>
+                    <button onclick="answerQuestion(1, 'B')" class="w-full text-left bg-slate-800/50 hover:bg-emerald-950/50 hover:border-emerald-500/50 border border-slate-700/50 p-4 rounded-2xl transition-all cursor-pointer">
+                        <div class="font-semibold text-slate-200 text-sm">B. 悠揚的歐式噴泉流水，與文藝復興庭院的風鈴</div>
+                    </button>
+                </div>
+
+                <!-- Q2 (Hidden initially) -->
+                <div id="q2" class="space-y-3 transition-opacity duration-300 hidden">
+                    <p class="text-sm font-semibold text-slate-300 mb-2 text-center">2. 最完美的下午茶時光，你偏好？</p>
+                    <button onclick="answerQuestion(2, 'A')" class="w-full text-left bg-slate-800/50 hover:bg-indigo-950/50 hover:border-indigo-500/50 border border-slate-700/50 p-4 rounded-2xl transition-all cursor-pointer">
+                        <div class="font-semibold text-slate-200 text-sm">A. 抹茶香氣，伴隨眼前白雪蓋頂的震撼山景</div>
+                    </button>
+                    <button onclick="answerQuestion(2, 'B')" class="w-full text-left bg-slate-800/50 hover:bg-emerald-950/50 hover:border-emerald-500/50 border border-slate-700/50 p-4 rounded-2xl transition-all cursor-pointer">
+                        <div class="font-semibold text-slate-200 text-sm">B. 莊園咖啡，欣賞精確對稱幾何設計的金色灌木群</div>
+                    </button>
+                </div>
+
+                <!-- Q3 (Hidden initially) -->
+                <div id="q3" class="space-y-3 transition-opacity duration-300 hidden">
+                    <p class="text-sm font-semibold text-slate-300 mb-2 text-center">3. 最渴望哪種探索步調？</p>
+                    <button onclick="answerQuestion(3, 'A')" class="w-full text-left bg-slate-800/50 hover:bg-indigo-950/50 hover:border-indigo-500/50 border border-slate-700/50 p-4 rounded-2xl transition-all cursor-pointer">
+                        <div class="font-semibold text-slate-200 text-sm">A. 靜享沉澱，大自然的永恆寂靜美學</div>
+                    </button>
+                    <button onclick="answerQuestion(3, 'B')" class="w-full text-left bg-slate-800/50 hover:bg-emerald-950/50 hover:border-emerald-500/50 border border-slate-700/50 p-4 rounded-2xl transition-all cursor-pointer">
+                        <div class="font-semibold text-slate-200 text-sm">B. 人文巡禮，漫步於歷史沉澱的厚重木桁石街</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Panel (Hidden initially) -->
+            <div id="resultPanel" class="hidden text-center space-y-6">
+                <div>
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Recommended Destination</span>
+                    <h3 class="text-2xl font-black text-white mt-1">你的今天命定之所是...</h3>
+                </div>
+
+                <!-- Result Card -->
+                <div id="resultCard" class="p-6 rounded-2xl border text-left">
+                    <h4 id="resultTitle" class="text-xl font-bold mb-2"></h4>
+                    <p id="resultDesc" class="text-sm text-slate-300 leading-relaxed"></p>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <a id="resultLink" href="" class="w-full text-center py-3.5 px-6 rounded-full font-bold text-slate-900 transition-all text-sm tracking-wider uppercase">
+                        前往探索！
+                    </a>
+                    <button onclick="resetRecommender()" class="text-slate-400 hover:text-white text-xs py-2 transition-all">
+                        重新測試
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sound effect particles system & interactions -->
+    <script>
+        // Track answers for recommendation
+        let answers = { q1: '', q2: '', q3: '' };
+        let currentStep = 1;
+
+        // Desktop Hover Handling
+        function handleHover(destination) {
+            document.body.dataset.hover = destination;
+            
+            // Apply visual adjustments to panels
+            const pJapan = document.getElementById('panelJapan');
+            const pGermany = document.getElementById('panelGermany');
+            const central = document.getElementById('centralTitle');
+
+            if (window.innerWidth >= 768) { // Only on desktop
+                if (destination === 'japan') {
+                    pJapan.style.flex = '1.4';
+                    pGermany.style.flex = '0.6';
+                    central.style.opacity = '0.4';
+                } else if (destination === 'germany') {
+                    pJapan.style.flex = '0.6';
+                    pGermany.style.flex = '1.4';
+                    central.style.opacity = '0.4';
+                }
+            }
+            
+            // Adjust volume accordingly if audio initialized and active
+            if (audioCtx && !isMuted) {
+                updateVolumeForHoverState(destination);
+            }
+        }
+
+        function handleLeave() {
+            document.body.removeAttribute('data-hover');
+            
+            const pJapan = document.getElementById('panelJapan');
+            const pGermany = document.getElementById('panelGermany');
+            const central = document.getElementById('centralTitle');
+
+            if (window.innerWidth >= 768) {
+                pJapan.style.flex = '1';
+                pGermany.style.flex = '1';
+                central.style.opacity = '1';
+            }
+            
+            if (audioCtx && !isMuted) {
+                updateVolumeForHoverState(null);
+            }
+        }
+
+        // Mobile Tap Handling for responsive grid accordion
+        function handleMobileTap(destination) {
+            if (window.innerWidth >= 768) return; // Desktop uses hovers
+
+            const pJapan = document.getElementById('panelJapan');
+            const pGermany = document.getElementById('panelGermany');
+
+            if (destination === 'japan') {
+                pJapan.style.flex = '2.5';
+                pGermany.style.flex = '1';
+                pJapan.querySelector('a').style.opacity = '1';
+                pJapan.querySelector('a').style.pointerEvents = 'auto';
+            } else {
+                pJapan.style.flex = '1';
+                pGermany.style.flex = '2.5';
+                pGermany.querySelector('a').style.opacity = '1';
+                pGermany.querySelector('a').style.pointerEvents = 'auto';
+            }
+
+            // Trigger gentle wind chime sound
+            if (audioCtx && !isMuted) {
+                updateVolumeForHoverState(destination);
+                playChime([350, 440, 520], 0.05, destination === 'japan' ? 'sine' : 'triangle');
+            }
+        }
+
+        // Recommender Modal Handlers
+        function openRecommender() {
+            const modal = document.getElementById('recommenderModal');
+            const content = document.getElementById('recommenderContent');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-95');
+            resetRecommender();
+        }
+
+        function closeRecommender() {
+            const modal = document.getElementById('recommenderModal');
+            const content = document.getElementById('recommenderContent');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.add('scale-95');
+        }
+
+        function answerQuestion(step, value) {
+            if (step === 1) {
+                answers.q1 = value;
+                document.getElementById('q1').classList.add('hidden');
+                document.getElementById('q2').classList.remove('hidden');
+                document.getElementById('dot2').className = 'w-3 h-3 rounded-full bg-amber-400';
+            } else if (step === 2) {
+                answers.q2 = value;
+                document.getElementById('q2').classList.add('hidden');
+                document.getElementById('q3').classList.remove('hidden');
+                document.getElementById('dot3').className = 'w-3 h-3 rounded-full bg-amber-400';
+            } else if (step === 3) {
+                answers.q3 = value;
+                document.getElementById('q3').classList.add('hidden');
+                calculateResult();
+            }
+        }
+
+        function calculateResult() {
+            // Simple scoring: Count of A vs B
+            let aCount = 0;
+            if (answers.q1 === 'A') aCount++;
+            if (answers.q2 === 'A') aCount++;
+            if (answers.q3 === 'A') aCount++;
+
+            document.getElementById('quizForm').classList.add('hidden');
+            const resPanel = document.getElementById('resultPanel');
+            resPanel.classList.remove('hidden');
+
+            const card = document.getElementById('resultCard');
+            const title = document.getElementById('resultTitle');
+            const desc = document.getElementById('resultDesc');
+            const link = document.getElementById('resultLink');
+
+            if (aCount >= 2) {
+                // Kawaguchiko
+                card.className = "p-6 rounded-2xl border border-indigo-500/30 bg-indigo-950/20 text-left";
+                title.innerText = "🗻 日本・河口湖 (Kawaguchiko)";
+                title.className = "text-xl font-bold text-rose-300 mb-2";
+                desc.innerText = "你的心靈此刻渴望全然的平靜。在無暇的富士山景中洗滌塵囂，凝視寧靜的水面，一碗熱騰騰的抹茶或是一場日式暖湯，是治癒你日常疲憊的最佳良藥。";
+                link.href = "/kawaguchiko.html";
+                link.className = "w-full text-center py-3.5 px-6 rounded-full font-bold text-slate-900 bg-gradient-to-r from-rose-400 to-indigo-500 hover:from-rose-300 hover:to-indigo-400 text-slate-900 transition-all text-sm tracking-wider uppercase cursor-pointer";
+                link.innerText = "即刻啟程河口湖";
+            } else {
+                // Leonberg
+                card.className = "p-6 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 text-left";
+                title.innerText = "🏰 德國・萊昂貝格 (Leonberg)";
+                title.className = "text-xl font-bold text-emerald-300 mb-2";
+                desc.innerText = "你追求深刻的人文對話與古典美感。南德唯一的橘園花園、文藝復興的雕塑噴泉，與鋪滿石板的中古半木結構小屋，為你的冒險魂注入滿滿的浪漫與探索動力。";
+                link.href = "/leonberg.html";
+                link.className = "w-full text-center py-3.5 px-6 rounded-full font-bold text-slate-900 bg-gradient-to-r from-emerald-400 to-amber-500 hover:from-emerald-300 hover:to-amber-400 text-slate-900 transition-all text-sm tracking-wider uppercase cursor-pointer";
+                link.innerText = "即刻啟程萊昂貝格";
+            }
+        }
+
+        function resetRecommender() {
+            answers = { q1: '', q2: '', q3: '' };
+            document.getElementById('quizForm').classList.remove('hidden');
+            document.getElementById('resultPanel').classList.add('hidden');
+            document.getElementById('q1').classList.remove('hidden');
+            document.getElementById('q2').classList.add('hidden');
+            document.getElementById('q3').classList.add('hidden');
+            document.getElementById('dot2').className = 'w-3 h-3 rounded-full bg-slate-700';
+            document.getElementById('dot3').className = 'w-3 h-3 rounded-full bg-slate-700';
+        }
+
+        // Particle generation for romantic background ambience
+        function createParticles() {
+            const container = document.body;
+            const particleCount = 20;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 4 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.bottom = `0%`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                container.appendChild(particle);
+            }
+        }
+
+        window.onload = function() {
+            createParticles();
+            // Trigger layout adjusting in case viewport changes
+            window.addEventListener('resize', () => {
+                if(window.innerWidth >= 768) {
+                    document.getElementById('panelJapan').style.flex = '1';
+                    document.getElementById('panelGermany').style.flex = '1';
+                }
+            });
+        };
+    </script>
+</body>
+</html>

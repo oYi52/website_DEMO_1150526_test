@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>富士山河口湖完全旅遊指南 | Mount Fuji Kawaguchiko Guide</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Noto Sans TC & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        fuji: {
+                            blue: '#2D4B73',
+                            light: '#E2EAF4',
+                            dark: '#1B2E4A',
+                            sakura: '#FFB7C5',
+                            lavender: '#967BB6',
+                            maple: '#C84B31',
+                            snow: '#F4F7F6',
+                        }
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateX(0px) translateY(0px)' },
+                            '50%': { transform: 'translateX(30px) translateY(-5px)' },
+                        },
+                        ripple: {
+                            '0%, 100%': { transform: 'scaleY(1)', opacity: 0.8 },
+                            '50%': { transform: 'scaleY(0.95)', opacity: 0.5 },
+                        }
+                    },
+                    animation: {
+                        float: 'float 12s ease-in-out infinite',
+                        floatSlow: 'float 20s ease-in-out infinite',
+                        ripple: 'ripple 4s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .season-tab-active {
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            font-weight: 700;
+        }
+        /* 自訂滾動條 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2D4B73;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1B2E4A;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed">
+
+    <!-- 導覽列 -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-3 group">
+                    <div class="relative w-12 h-12 flex items-center justify-center bg-fuji-blue rounded-full text-white overflow-hidden shadow-md">
+                        <span class="text-xs font-bold tracking-widest z-10">富士</span>
+                        <!-- 裝飾紅日 -->
+                        <div class="absolute w-8 h-8 bg-fuji-maple rounded-full -bottom-2 -right-1 opacity-80 group-hover:scale-110 transition-transform duration-300"></div>
+                    </div>
+                    <div>
+                        <span class="font-serif text-xl font-bold tracking-wider text-fuji-dark block">KAWAGUCHIKO</span>
+                        <span class="text-xs text-slate-500 tracking-widest block font-medium">河口湖自然與旅遊指南</span>
+                    </div>
+                </a>
+
+                <!-- 桌面版選單 -->
+                <nav class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="#about" class="hover:text-fuji-blue transition-colors duration-200">魅力河口湖</a>
+                    <a href="#seasons" class="hover:text-fuji-blue transition-colors duration-200">四季風情</a>
+                    <a href="#attractions" class="hover:text-fuji-blue transition-colors duration-200">必訪景點</a>
+                    <a href="#simulator" class="hover:text-fuji-blue transition-colors duration-200">能見度模擬</a>
+                    <a href="#access" class="hover:text-fuji-blue transition-colors duration-200">交通指南</a>
+                    <a href="#planner" class="hover:text-fuji-blue transition-colors duration-200">行程規劃</a>
+                </nav>
+
+                <!-- 手機版選單按鈕 -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-600 hover:text-fuji-blue focus:outline-none">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 手機版選單 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-100 px-4 py-4 space-y-3 shadow-lg">
+            <a href="#about" class="mobile-nav-link block px-3 py-2 rounded-md hover:bg-slate-50 text-slate-700">魅力河口湖</a>
+            <a href="#seasons" class="mobile-nav-link block px-3 py-2 rounded-md hover:bg-slate-50 text-slate-700">四季風情</a>
+            <a href="#attractions" class="mobile-nav-link block px-3 py-2 rounded-md hover:bg-slate-50 text-slate-700">必訪景點</a>
+            <a href="#simulator" class="mobile-nav-link block px-3 py-2 rounded-md hover:bg-slate-50 text-slate-700">能見度模擬</a>
+            <a href="#access" class="mobile-nav-link block px-3 py-2 rounded-md hover:bg-slate-50 text-slate-700">交通指南</a>
+            <a href="#planner" class="mobile-nav-link block px-3 py-2 rounded-md hover:bg-slate-50 text-slate-700">行程規劃</a>
+        </div>
+    </header>
+
+    <!-- 視覺首頁 (Hero Banner) -->
+    <section class="relative bg-gradient-to-b from-fuji-light to-white overflow-hidden pt-10 pb-20 lg:py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- 文案 -->
+            <div class="lg:col-span-5 z-10 space-y-6 text-center lg:text-left">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-fuji-blue/10 text-fuji-blue tracking-widest uppercase">
+                    Yamanashi, Japan | 山梨縣
+                </span>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-fuji-dark tracking-tight leading-none">
+                    遇見靜謐的<br>
+                    <span class="text-fuji-blue relative inline-block">
+                        富士山鏡像
+                        <span class="absolute bottom-1 left-0 w-full h-2 bg-fuji-sakura/40 -z-10"></span>
+                    </span>
+                </h1>
+                <p class="text-base sm:text-lg text-slate-600 max-w-lg mx-auto lg:mx-0 font-light">
+                    河口湖是富士五湖中最具代表性、交通最便利的湖泊。在這裡，您能欣賞到富士山倒映於湖面上的神聖「逆富士」，感受日本最純粹的四季變換。
+                </p>
+                <div class="pt-4 flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                    <a href="#planner" class="px-8 py-4 bg-fuji-blue hover:bg-fuji-dark text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center space-x-2">
+                        <i data-lucide="compass" class="w-5 h-5"></i>
+                        <span>開始規劃行程</span>
+                    </a>
+                    <a href="#simulator" class="px-8 py-4 bg-white border border-slate-200 hover:border-fuji-blue text-fuji-blue font-bold rounded-xl shadow-sm hover:bg-slate-50 transition-all duration-300 flex items-center justify-center space-x-2">
+                        <i data-lucide="eye" class="w-5 h-5"></i>
+                        <span>即時能見度模擬</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- SVG 富士山插圖 -->
+            <div class="lg:col-span-7 relative flex justify-center items-center">
+                <div class="w-full max-w-[600px] aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-b from-sky-200 via-sky-100 to-indigo-50 relative">
+                    <!-- 背景雲朵 (動畫) -->
+                    <div class="absolute top-1/4 left-1/10 w-24 h-8 bg-white/70 rounded-full blur-[1px] animate-float"></div>
+                    <div class="absolute top-1/3 right-1/4 w-32 h-10 bg-white/60 rounded-full blur-[2px] animate-floatSlow"></div>
+
+                    <!-- 太陽 -->
+                    <div class="absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 opacity-80 shadow-[0_0_50px_rgba(244,63,94,0.3)]"></div>
+                    
+                    <!-- 富士山主體 SVG -->
+                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 遠山 -->
+                        <path d="M50 320 L150 260 L200 320 Z" fill="#4B6584" opacity="0.4"/>
+                        <path d="M350 320 L420 280 L480 320 Z" fill="#4B6584" opacity="0.4"/>
+
+                        <!-- 富士山山體 (深藍) -->
+                        <path d="M80 320 C180 320 200 120 250 120 C300 120 320 320 420 320 Z" fill="#2D4B73"/>
+                        
+                        <!-- 富士山雪冠 -->
+                        <path d="M216 182 C230 182 238 120 250 120 C262 120 270 182 284 182 C275 195 265 188 250 200 C235 188 225 195 216 182 Z" fill="#FFFFFF"/>
+                        
+                        <!-- 湖水分隔線 -->
+                        <line x1="0" y1="320" x2="500" y2="320" stroke="#1B2E4A" stroke-width="2" opacity="0.2"/>
+
+                        <!-- 湖水 (下半部) -->
+                        <rect x="0" y="321" width="500" height="180" fill="#3D5F8C" opacity="0.9"/>
+
+                        <!-- 倒影：富士山 (逆富士) -->
+                        <g class="animate-ripple origin-top">
+                            <!-- 倒影山體 -->
+                            <path d="M100 322 C185 322 201 462 250 462 C299 462 315 322 400 322 Z" fill="#223959" opacity="0.5"/>
+                            <!-- 倒影雪冠 -->
+                            <path d="M219 418 C232 418 239 462 250 462 C261 462 268 418 281 418 C273 408 264 413 250 404 C236 413 227 408 219 418 Z" fill="#EEEEEE" opacity="0.6"/>
+                        </g>
+
+                        <!-- 湖面水紋線 -->
+                        <path d="M50 340 H120 M380 340 H450 M150 365 H350 M80 395 H200 M300 395 H420 M120 430 H380" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.4" class="animate-ripple"/>
+
+                        <!-- 前景：櫻花樹枝框景 -->
+                        <path d="M0 0 C50 20 80 80 120 40 C140 20 120 100 160 110" stroke="#3E2723" stroke-width="4" stroke-linecap="round"/>
+                        <!-- 櫻花瓣 (粉紅圓點與小花狀) -->
+                        <circle cx="120" cy="40" r="8" fill="#FFB7C5"/>
+                        <circle cx="115" cy="48" r="6" fill="#FFA5B5"/>
+                        <circle cx="128" cy="38" r="5" fill="#FFA5B5"/>
+                        <circle cx="160" cy="110" r="7" fill="#FFB7C5"/>
+                        <circle cx="155" cy="118" r="5" fill="#FFA5B5"/>
+                        <circle cx="70" cy="30" r="10" fill="#FFB7C5"/>
+                        <circle cx="85" cy="45" r="8" fill="#FFB7C5"/>
+                        <circle cx="140" cy="60" r="6" fill="#FFA5B5"/>
+                    </svg>
+
+                    <!-- 左下角標籤 -->
+                    <div class="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20 text-white text-xs flex items-center space-x-1.5">
+                        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                        <span>模擬即時鏡像逆富士</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 魅力河口湖簡介 -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+                <h2 class="text-xs font-bold text-fuji-blue tracking-widest uppercase">Overview | 景點特徵</h2>
+                <p class="text-3xl sm:text-4xl font-bold text-fuji-dark">為什麼一生必訪一次河口湖？</p>
+                <div class="w-16 h-1 bg-fuji-blue mx-auto rounded"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 特色 1 -->
+                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-xl hover:bg-white transition-all duration-300">
+                    <div class="w-12 h-12 bg-fuji-blue/10 rounded-xl flex items-center justify-center text-fuji-blue mb-6">
+                        <i data-lucide="image" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-fuji-dark mb-3">最完美的富士山視角</h3>
+                    <p class="text-slate-600 font-light text-sm">
+                        河口湖位於富士山正北側，因此左右對稱的「完美山形」在這裡一覽無遺。尤其是清晨無風時，平靜的湖面會像鏡子一樣，倒映出令人屏息的「逆富士」絕景。
+                    </p>
+                </div>
+
+                <!-- 特色 2 -->
+                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-xl hover:bg-white transition-all duration-300">
+                    <div class="w-12 h-12 bg-fuji-blue/10 rounded-xl flex items-center justify-center text-fuji-blue mb-6">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-fuji-dark mb-3">絕美豐富的四季色彩</h3>
+                    <p class="text-slate-600 font-light text-sm">
+                        不論哪個季節造訪都各有其美：春天有粉嫩櫻花襯托雪冠；夏天有盛開的薰衣草與綠意；秋天是火紅的楓葉迴廊；冬天則是晴空率最高、雪景最壯麗的黃金期。
+                    </p>
+                </div>
+
+                <!-- 特色 3 -->
+                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-xl hover:bg-white transition-all duration-300">
+                    <div class="w-12 h-12 bg-fuji-blue/10 rounded-xl flex items-center justify-center text-fuji-blue mb-6">
+                        <i data-lucide="coffee" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-fuji-dark mb-3">成熟便利的度假配套</h3>
+                    <p class="text-slate-600 font-light text-sm">
+                        除了大自然，河口湖還擁有一流的溫泉旅館、美術館、全景觀纜車與環湖復古巴士。不論是想進行奢華溫泉奢享，還是輕鬆的一日遊，都能完美滿足。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 季節風情 (互動 Seasons Section) -->
+    <section id="seasons" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-12">
+                <h2 class="text-xs font-bold text-fuji-blue tracking-widest uppercase">Four Seasons | 四季探索</h2>
+                <p class="text-3xl sm:text-4xl font-bold text-fuji-dark">點擊感受河口湖的色調轉換</p>
+                <p class="text-sm text-slate-500 font-light">我們用最具象徵性的色彩，重現河口湖著名的四季景緻。</p>
+                <div class="w-16 h-1 bg-fuji-blue mx-auto rounded"></div>
+            </div>
+
+            <!-- 四季切換 Tabs -->
+            <div class="max-w-md mx-auto bg-slate-200/60 p-1.5 rounded-xl flex justify-between items-center mb-12">
+                <button onclick="switchSeason('spring')" id="btn-spring" class="season-tab-active flex-1 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 text-center">春櫻</button>
+                <button onclick="switchSeason('summer')" id="btn-summer" class="flex-1 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-fuji-dark transition-all duration-300 text-center">夏薰</button>
+                <button onclick="switchSeason('autumn')" id="btn-autumn" class="flex-1 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-fuji-dark transition-all duration-300 text-center">秋楓</button>
+                <button onclick="switchSeason('winter')" id="btn-winter" class="flex-1 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-fuji-dark transition-all duration-300 text-center">冬雪</button>
+            </div>
+
+            <!-- 季節內容展示卡 -->
+            <div id="season-display-card" class="bg-white rounded-3xl overflow-hidden shadow-xl border border-slate-100 p-8 lg:p-12 transition-all duration-500 transform">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- 季節特製 SVG 插圖 -->
+                    <div class="lg:col-span-5 flex justify-center">
+                        <div id="season-illustration-container" class="w-full max-w-[320px] aspect-square rounded-2xl relative shadow-md overflow-hidden bg-sky-100 transition-colors duration-500">
+                            <!-- SVG 將由 JS 動態替換 -->
+                        </div>
+                    </div>
+
+                    <!-- 季節描述 -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="flex items-center space-x-3">
+                            <span id="season-badge" class="px-3 py-1 rounded-full text-xs font-bold text-white tracking-widest bg-fuji-sakura">春季 4月中旬 - 4月下旬</span>
+                            <span id="season-temp" class="text-slate-500 text-sm font-medium flex items-center"><i data-lucide="thermometer" class="w-4 h-4 mr-1"></i> 平均：10°C - 18°C</span>
+                        </div>
+                        <h3 id="season-title" class="text-3xl font-extrabold text-fuji-dark">春の華：櫻花與富士山的粉紅交響詩</h3>
+                        <p id="season-desc" class="text-slate-600 leading-relaxed font-light">
+                            春天的河口湖是人氣最旺的季節。當櫻花盛開時，北岸的「櫻花步道」便形成一片粉紅色的世界。以漫天飛舞的粉嫩吉野櫻為前景，與遠方蓋著白雪的藍色富士山構成一幅最具日本代表性的經典畫面。
+                        </p>
+                        <div class="border-t border-slate-100 pt-6">
+                            <h4 class="text-sm font-bold text-fuji-dark mb-3 flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-1 text-fuji-blue"></i> 最佳觀賞點</h4>
+                            <ul id="season-spots" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-600">
+                                <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-fuji-sakura mr-2"></span> 河口湖北岸櫻花步道</li>
+                                <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-fuji-sakura mr-2"></span> 新倉山淺間公園（忠靈塔）</li>
+                                <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-fuji-sakura mr-2"></span> 長崎公園</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 熱門必訪景點介紹 -->
+    <section id="attractions" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+                <h2 class="text-xs font-bold text-fuji-blue tracking-widest uppercase">Top Attractions | 必訪景點</h2>
+                <p class="text-3xl sm:text-4xl font-bold text-fuji-dark">河口湖經典地標推薦</p>
+                <div class="w-16 h-1 bg-fuji-blue mx-auto rounded"></div>
+            </div>
+
+            <!-- 景點卡片 Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- 景點 1 -->
+                <div class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+                    <!-- 景點特色向量圖 -->
+                    <div class="h-48 bg-gradient-to-b from-teal-50 to-emerald-100 relative flex items-center justify-center p-6">
+                        <svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 富士山 -->
+                            <path d="M25 65 C45 65 50 25 60 25 C70 25 75 65 95 65 Z" fill="#2D4B73" opacity="0.3"/>
+                            <path d="M53 38 C56 38 58 25 60 25 C62 25 64 38 67 38 Z" fill="#FFFFFF" opacity="0.5"/>
+                            <!-- 薰衣草花叢 -->
+                            <path d="M5 80 Q25 60 45 80" stroke="#967BB6" stroke-width="4" fill="none"/>
+                            <path d="M25 80 Q50 65 75 80" stroke="#967BB6" stroke-width="5" fill="none"/>
+                            <circle cx="20" cy="65" r="4" fill="#967BB6"/>
+                            <circle cx="25" cy="68" r="3" fill="#B39EB5"/>
+                            <circle cx="45" cy="70" r="4.5" fill="#967BB6"/>
+                            <circle cx="50" cy="73" r="3.5" fill="#B39EB5"/>
+                            <circle cx="10" cy="75" r="3" fill="#967BB6"/>
+                        </svg>
+                        <span class="absolute top-4 right-4 bg-emerald-600/10 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded">免門票</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <h3 class="text-xl font-bold text-fuji-dark">大石公園</h3>
+                            <p class="text-sm text-slate-500 font-light leading-relaxed">
+                                位於河口湖北岸，以其豐富的四季花草與富士山交相輝映而聞名。6月下旬至7月中旬的紫色薰衣草季、10月的紅色波波草（掃帚草），是攝影愛好者的天堂。
+                            </p>
+                        </div>
+                        <div class="border-t border-slate-100 mt-6 pt-4 flex justify-between items-center text-xs text-slate-500">
+                            <span class="flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-1 text-slate-400"></i> 建議停留：1 小時</span>
+                            <span class="flex items-center"><i data-lucide="bus" class="w-4 h-4 mr-1 text-slate-400"></i> 紅線巴士 20 站</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 景點 2 -->
+                <div class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+                    <!-- 景點特色向量圖 -->
+                    <div class="h-48 bg-gradient-to-b from-rose-50 to-amber-100 relative flex items-center justify-center p-6">
+                        <svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 富士山 -->
+                            <path d="M10 70 C30 70 40 30 50 30 C60 30 70 70 90 70 Z" fill="#2D4B73" opacity="0.3"/>
+                            <!-- 纜車架與纜車 -->
+                            <line x1="5" y1="20" x2="95" y2="50" stroke="#78909C" stroke-width="2"/>
+                            <!-- 纜車廂 -->
+                            <rect x="40" y="30" width="20" height="16" rx="3" fill="#D32F2F"/>
+                            <rect x="43" y="33" width="6" height="5" fill="#E0F7FA"/>
+                            <rect x="51" y="33" width="6" height="5" fill="#E0F7FA"/>
+                            <line x1="50" y1="20" x2="50" y2="30" stroke="#455A64" stroke-width="2"/>
+                        </svg>
+                        <span class="absolute top-4 right-4 bg-rose-600/10 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded">人氣推薦</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <h3 class="text-xl font-bold text-fuji-dark">富士山全景纜車</h3>
+                            <p class="text-sm text-slate-500 font-light leading-relaxed">
+                                搭乘僅需3分鐘的纜車，即可抵達標高1,075公尺的天上山山頂展望台。在這裡您可以享受到無遮擋的富士山寬幅全景以及河口湖全貌，是俯瞰的首選。
+                            </p>
+                        </div>
+                        <div class="border-t border-slate-100 mt-6 pt-4 flex justify-between items-center text-xs text-slate-500">
+                            <span class="flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-1 text-slate-400"></i> 建議停留：1.5 小時</span>
+                            <span class="flex items-center"><i data-lucide="bus" class="w-4 h-4 mr-1 text-slate-400"></i> 紅線巴士 9 站</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 景點 3 -->
+                <div class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+                    <!-- 景點特色向量圖 -->
+                    <div class="h-48 bg-gradient-to-b from-indigo-50 to-blue-100 relative flex items-center justify-center p-6">
+                        <svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 富士山 -->
+                            <path d="M30 60 C45 60 50 30 57 30 C64 30 69 60 84 60 Z" fill="#2D4B73" opacity="0.3"/>
+                            <!-- 忠靈塔(五重塔)簡化 -->
+                            <rect x="5" y="70" width="22" height="4" fill="#D32F2F"/>
+                            <rect x="7" y="60" width="18" height="10" fill="#EEEEEE"/>
+                            <rect x="4" y="60" width="24" height="2" fill="#D32F2F"/>
+                            <rect x="9" y="52" width="14" height="8" fill="#EEEEEE"/>
+                            <rect x="6" y="52" width="20" height="2" fill="#D32F2F"/>
+                            <rect x="11" y="46" width="10" height="6" fill="#EEEEEE"/>
+                            <rect x="8" y="46" width="16" height="2" fill="#D32F2F"/>
+                            <!-- 避雷針 -->
+                            <line x1="16" y1="46" x2="16" y2="35" stroke="#FBC02D" stroke-width="2"/>
+                        </svg>
+                        <span class="absolute top-4 right-4 bg-blue-600/10 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded">明信片景點</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <h3 class="text-xl font-bold text-fuji-dark">新倉山淺間公園</h3>
+                            <p class="text-sm text-slate-500 font-light leading-relaxed">
+                                雖然行政區位在隔壁的富士吉田市，但與河口湖極近。五重塔（忠靈塔）、盛開的櫻花與壯麗富士山同框的畫面，代表了外國旅客心中最經典的日本。
+                            </p>
+                        </div>
+                        <div class="border-t border-slate-100 mt-6 pt-4 flex justify-between items-center text-xs text-slate-500">
+                            <span class="flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-1 text-slate-400"></i> 建議停留：2 小時</span>
+                            <span class="flex items-center"><i data-lucide="train" class="w-4 h-4 mr-1 text-slate-400"></i> 下吉田站步行 20 分鐘</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 富士山能見度與天氣模擬器 (Fuji Visibility Simulator) -->
+    <section id="simulator" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-slate-950 to-black opacity-90 -z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-12">
+                <span class="px-3 py-1 rounded-full text-[11px] font-extrabold bg-amber-500/10 text-amber-400 tracking-wider uppercase border border-amber-500/20">動態模擬與預估</span>
+                <p class="text-3xl sm:text-4xl font-extrabold">富士山「露臉機率」預估器</p>
+                <p class="text-slate-400 font-light text-sm">
+                    你知道富士山常常躲在雲霧後面嗎？選擇計畫出遊的「月份」與當下的「天氣」，即時模擬富士山的露臉能見度！
+                </p>
+                <div class="w-16 h-1 bg-amber-500 mx-auto rounded"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- 模擬控制台 (左側) -->
+                <div class="lg:col-span-5 bg-white/5 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/10 space-y-6">
+                    <h3 class="text-lg font-bold text-amber-400 flex items-center">
+                        <i data-lucide="sliders" class="w-5 h-5 mr-2"></i> 調整旅行設定
+                    </h3>
+                    
+                    <!-- 月份選擇 -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold text-slate-300 tracking-wider">計畫旅行月份</label>
+                        <select id="sim-month" onchange="calculateVisibility()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 text-white">
+                            <option value="1">1 月 (冬季 - 露臉機率極高)</option>
+                            <option value="2">2 月 (冬季 - 晴朗少雲)</option>
+                            <option value="3">3 月 (冬春交替 - 中等偏高)</option>
+                            <option value="4">4 月 (春季 - 偶有春雨)</option>
+                            <option value="5">5 月 (春末 - 雲量漸多)</option>
+                            <option value="6">6 月 (梅雨季 - 經常大霧)</option>
+                            <option value="7">7 月 (夏季 - 濕氣重多午後雲)</option>
+                            <option value="8">8 月 (夏季 - 多颱風與積雨雲)</option>
+                            <option value="9">9 月 (秋雨季 - 變化大)</option>
+                            <option value="10">10 月 (秋季 - 天高氣爽)</option>
+                            <option value="11">11 月 (深秋 - 非常晴朗)</option>
+                            <option value="12">12 月 (冬季 - 幾乎天天可見)</option>
+                        </select>
+                    </div>
+
+                    <!-- 天氣選擇 -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold text-slate-300 tracking-wider">預報天氣狀況</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button id="wea-sunny" onclick="setWeather('sunny')" class="py-2.5 px-3 rounded-lg text-xs font-bold transition-all border border-amber-500 bg-amber-500 text-slate-950 flex flex-col items-center space-y-1">
+                                <i data-lucide="sun" class="w-4 h-4"></i>
+                                <span>晴朗</span>
+                            </button>
+                            <button id="wea-cloudy" onclick="setWeather('cloudy')" class="py-2.5 px-3 rounded-lg text-xs font-bold transition-all border border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-500 flex flex-col items-center space-y-1">
+                                <i data-lucide="cloud" class="w-4 h-4"></i>
+                                <span>多雲</span>
+                            </button>
+                            <button id="wea-rainy" onclick="setWeather('rainy')" class="py-2.5 px-3 rounded-lg text-xs font-bold transition-all border border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-500 flex flex-col items-center space-y-1">
+                                <i data-lucide="cloud-rain" class="w-4 h-4"></i>
+                                <span>陰雨/大霧</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 時段選擇 -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-semibold text-slate-300 tracking-wider">觀察時段</label>
+                        <select id="sim-time" onchange="calculateVisibility()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 text-white">
+                            <option value="morning">清晨至上午 (06:00 - 10:00 - 最推薦)</option>
+                            <option value="afternoon">午後至傍晚 (12:00 - 17:00 - 易起霧)</option>
+                        </select>
+                    </div>
+
+                    <!-- 統計資訊 -->
+                    <div class="bg-white/5 p-4 rounded-xl space-y-2 text-xs text-slate-300 border border-white/5">
+                        <p class="font-bold text-white flex items-center"><i data-lucide="info" class="w-4 h-4 mr-1 text-amber-400"></i> 小知識：什麼時候最容易看到富士山？</p>
+                        <p class="font-light leading-relaxed">
+                            統計顯示，冬天的 11 月至 2 月是能見度最高的月份（高達 75-80%）。而上午通常比下午更不容易有積雲。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 模擬結果 & 動態渲染 (右側) -->
+                <div class="lg:col-span-7 space-y-6">
+                    
+                    <!-- 模擬螢幕 -->
+                    <div class="relative w-full aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-inner bg-slate-950">
+                        
+                        <!-- 動態畫布 / SVG 效果 -->
+                        <div id="simulator-viewport" class="absolute inset-0 transition-all duration-700 overflow-hidden">
+                            <!-- 太陽/月亮/天空顏色會隨著選定時段與天氣動態調整 -->
+                            <div id="sim-sky" class="absolute inset-0 bg-gradient-to-b from-sky-400 to-indigo-300 transition-all duration-700"></div>
+                            
+                            <!-- 太陽 -->
+                            <div id="sim-sun" class="absolute top-[30%] left-[60%] w-16 h-16 rounded-full bg-amber-400 opacity-90 blur-[1px] transition-all duration-700"></div>
+
+                            <!-- 富士山體 -->
+                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 400 225" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 160 C120 160 140 50 200 50 C260 50 280 160 350 160 Z" fill="#1E293B" id="sim-mountain" class="transition-all duration-700"/>
+                                <path d="M174 92 C184 92 191 50 200 50 C209 50 216 92 226 92 C219 101 211 96 200 105 C189 96 181 101 174 92 Z" fill="#FFFFFF" id="sim-snow" class="transition-all duration-700"/>
+                                <rect x="0" y="160" width="400" height="65" fill="#0F172A" id="sim-lake" class="transition-all duration-700"/>
+                                
+                                <!-- 逆富士倒影 -->
+                                <g opacity="0.3">
+                                    <path d="M60 162 C125 162 142 220 200 220 C258 220 275 162 340 162 Z" fill="#1E293B"/>
+                                    <path d="M176 201 C185 201 192 220 200 220 C208 220 215 201 224 201 C218 195 210 198 200 192 C190 198 182 195 176 201 Z" fill="#FFFFFF"/>
+                                </g>
+                            </svg>
+
+                            <!-- 動態雲層 (會根據天氣與能見度調整透明度、寬度、位置與高斯模糊) -->
+                            <div id="sim-cloud-heavy" class="absolute inset-x-0 bottom-10 bg-white/70 h-16 blur-md transition-all duration-1000 transform translate-y-20 opacity-0"></div>
+                            <div id="sim-cloud-mist" class="absolute inset-0 bg-slate-300/30 backdrop-blur-[3px] transition-all duration-1000 opacity-0"></div>
+                            <div id="sim-cloud-1" class="absolute top-[40%] -left-10 w-48 h-10 bg-white/60 rounded-full blur-sm transition-all duration-1000"></div>
+                            <div id="sim-cloud-2" class="absolute top-[45%] right-0 w-64 h-12 bg-white/50 rounded-full blur-md transition-all duration-1000"></div>
+                        </div>
+
+                        <!-- 狀態浮標 -->
+                        <div class="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 text-[11px] flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                            <span class="font-semibold text-slate-200">河口湖北岸模擬視角</span>
+                        </div>
+                    </div>
+
+                    <!-- 機率數據板 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        
+                        <!-- 能見度百分比 -->
+                        <div class="bg-white/5 border border-white/10 p-5 rounded-2xl text-center space-y-1">
+                            <span class="text-xs text-slate-400 block font-medium">預估露臉機率</span>
+                            <span id="visibility-rate" class="text-4xl font-black text-amber-400">95%</span>
+                        </div>
+
+                        <!-- 建議前往指數 -->
+                        <div class="bg-white/5 border border-white/10 p-5 rounded-2xl text-center space-y-1">
+                            <span class="text-xs text-slate-400 block font-medium">推薦造訪指數</span>
+                            <span id="recommend-stars" class="text-xl font-bold text-rose-400">★★★★★</span>
+                        </div>
+
+                        <!-- 貼心提醒 -->
+                        <div class="bg-white/5 border border-white/10 p-5 rounded-2xl flex flex-col justify-center text-left">
+                            <span class="text-xs text-slate-400 font-medium block mb-1">貼心提醒</span>
+                            <span id="sim-advice" class="text-xs text-slate-200 font-light leading-snug">天氣極佳！非常適合拍攝「逆富士」，建議清晨 6-8 點前往湖邊等待。</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 交通指南 (Access Guide) -->
+    <section id="access" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+                <h2 class="text-xs font-bold text-fuji-blue tracking-widest uppercase">Transportation | 交通指南</h2>
+                <p class="text-3xl sm:text-4xl font-bold text-fuji-dark">如何從東京市區前往河口湖？</p>
+                <div class="w-16 h-1 bg-fuji-blue mx-auto rounded"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <!-- 交通管道 1：JR 鐵路 + 富士急行線 -->
+                <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col justify-between hover:shadow-lg transition-all duration-300">
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700">
+                                <i data-lucide="train" class="w-3.5 h-3.5 mr-1"></i> 舒適、不塞車首選
+                            </span>
+                            <span class="text-sm text-slate-500 font-medium">時間：約 2 小時</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-fuji-dark">JR 特急「富士回遊」(Fuji Excursion)</h3>
+                        <p class="text-sm text-slate-600 font-light leading-relaxed">
+                            最便利的鐵路方案，每日有固定班次從新宿直達河口湖，無需在大月站轉乘。全車皆為指定席，座位寬敞，極為舒適。
+                        </p>
+                        
+                        <!-- 步驟說明 -->
+                        <div class="space-y-3">
+                            <h4 class="text-xs font-bold text-slate-400 tracking-wider">乘車路線與步驟</h4>
+                            <div class="relative border-l-2 border-slate-200 pl-4 space-y-4 text-xs">
+                                <div class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-blue-600"></div>
+                                    <p class="font-bold text-slate-700">起點：JR 新宿站</p>
+                                    <p class="text-slate-500">搭乘「富士回遊」特急列車</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                                    <p class="font-bold text-slate-700">中途經過：大月站</p>
+                                    <p class="text-slate-500">直通運轉，不需下車轉乘</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-blue-600"></div>
+                                    <p class="font-bold text-slate-700">終點：富士急行電鐵 河口湖站</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-200 mt-8 pt-6 flex justify-between items-center text-sm font-bold">
+                        <span class="text-slate-500">單程票價</span>
+                        <span class="text-lg text-fuji-blue">約 4,130 日圓</span>
+                    </div>
+                </div>
+
+                <!-- 交通管道 2：直達高速巴士 -->
+                <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col justify-between hover:shadow-lg transition-all duration-300">
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">
+                                <i data-lucide="bus" class="w-3.5 h-3.5 mr-1"></i> 高 CP 值、免轉乘首選
+                            </span>
+                            <span class="text-sm text-slate-500 font-medium">時間：約 1.5 - 2 小時 (視路況)</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-fuji-dark">高速直達巴士 (High-Highway Bus)</h3>
+                        <p class="text-sm text-slate-600 font-light leading-relaxed">
+                            從新宿、澀谷、東京站等多個主要轉運站出發，皆有密集的直達巴士前往河口湖站。價格僅需火車的一半，但週末與旺季容易遇上塞車。
+                        </p>
+                        
+                        <!-- 步驟說明 -->
+                        <div class="space-y-3">
+                            <h4 class="text-xs font-bold text-slate-400 tracking-wider">乘車路線與步驟</h4>
+                            <div class="relative border-l-2 border-slate-200 pl-4 space-y-4 text-xs">
+                                <div class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-emerald-600"></div>
+                                    <p class="font-bold text-slate-700">起點：Busta 新宿 (新宿南口)</p>
+                                    <p class="text-slate-500">搭乘中央高速巴士（建議提前網路預約）</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                                    <p class="font-bold text-slate-700">中途經過：中央道</p>
+                                    <p class="text-slate-500">沿途可欣賞山梨縣山景</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-emerald-600"></div>
+                                    <p class="font-bold text-slate-700">終點：河口湖站前</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-200 mt-8 pt-6 flex justify-between items-center text-sm font-bold">
+                        <span class="text-slate-500">單程票價</span>
+                        <span class="text-lg text-fuji-blue">約 2,200 日圓</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 行程規劃器 (Itinerary Planner Widget) -->
+    <section id="planner" class="py-20 bg-slate-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            
+            <div class="text-center space-y-4 mb-12">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-fuji-blue/10 text-fuji-blue tracking-wider uppercase">
+                    Interactive Planner
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-fuji-dark">智能行程規劃器</h2>
+                <p class="text-sm text-slate-500 font-light">告訴我們您的喜好，一秒為您量身打造完美的河口湖一日遊行程！</p>
+                <div class="w-16 h-1 bg-fuji-blue mx-auto rounded"></div>
+            </div>
+
+            <!-- 規劃器主容器 -->
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+                
+                <!-- 選擇器（上半部） -->
+                <div class="p-8 border-b border-slate-100 bg-slate-50/50 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- 旅伴選擇 -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-400 tracking-wider">1. 旅伴成員</label>
+                        <select id="plan-partner" onchange="generateItinerary()" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-fuji-blue font-medium">
+                            <option value="couple">情侶/夫妻 (浪漫約會)</option>
+                            <option value="family">家庭親子 (輕鬆舒適)</option>
+                            <option value="solo">個人背包客 (探索攝影)</option>
+                        </select>
+                    </div>
+
+                    <!-- 旅遊步調 -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-400 tracking-wider">2. 旅遊步調</label>
+                        <select id="plan-pace" onchange="generateItinerary()" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-fuji-blue font-medium">
+                            <option value="chill">悠閒漫遊 (深度放鬆)</option>
+                            <option value="active">充實精實 (打卡拍美照)</option>
+                        </select>
+                    </div>
+
+                    <!-- 主要目的 -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-400 tracking-wider">3. 偏愛行程</label>
+                        <select id="plan-focus" onchange="generateItinerary()" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-fuji-blue font-medium">
+                            <option value="nature">自然風光 & 富士山景</option>
+                            <option value="culture">文化藝術 & 精緻景點</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- 生成結果展示區 -->
+                <div class="p-8 space-y-6">
+                    <h3 class="text-lg font-bold text-fuji-dark flex items-center">
+                        <i data-lucide="calendar" class="w-5 h-5 mr-2 text-fuji-blue"></i> 您的客製化一日遊行程
+                    </h3>
+
+                    <!-- 時間軸 -->
+                    <div id="itinerary-timeline" class="relative border-l-2 border-fuji-blue/30 pl-6 ml-4 space-y-8">
+                        <!-- 由 JS 動態繪製 -->
+                    </div>
+
+                    <!-- 貼心實用建議 -->
+                    <div id="planner-tip" class="bg-fuji-light/50 border border-fuji-blue/10 rounded-2xl p-4 text-xs text-fuji-dark font-light flex items-start space-x-2">
+                        <i data-lucide="lightbulb" class="w-5 h-5 text-fuji-blue shrink-0 mt-0.5"></i>
+                        <p id="planner-tip-text">
+                            <!-- 由 JS 動態替換 -->
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁尾 -->
+    <footer class="bg-fuji-dark text-slate-400 pt-16 pb-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            
+            <!-- 專欄 1：網站宗旨 -->
+            <div class="md:col-span-2 space-y-4">
+                <div class="flex items-center space-x-3 text-white">
+                    <div class="w-10 h-10 flex items-center justify-center bg-fuji-blue rounded-full text-white overflow-hidden shadow-md">
+                        <span class="text-[10px] font-bold tracking-wider">富士</span>
+                    </div>
+                    <span class="font-serif text-lg font-bold tracking-wider">KAWAGUCHIKO</span>
+                </div>
+                <p class="text-xs text-slate-500 font-light max-w-sm">
+                    這是一個非官方的河口湖旅遊倡導與指南網站。本站致力於推廣山梨縣富士河口湖地區的無盡之美，並提倡永續旅遊、綠色出行。
+                </p>
+                <p class="text-xs text-slate-600 font-light">
+                    註：本站所有素材均採用客製化向量 SVG 或無版權限制之樣式，保障智慧財產權。
+                </p>
+            </div>
+
+            <!-- 專欄 2：快速連結 -->
+            <div>
+                <h4 class="text-xs font-bold text-slate-200 tracking-widest uppercase mb-4">快速連結</h4>
+                <ul class="space-y-2 text-xs font-light">
+                    <li><a href="#about" class="hover:text-white transition-colors">魅力河口湖</a></li>
+                    <li><a href="#seasons" class="hover:text-white transition-colors">四季風情</a></li>
+                    <li><a href="#attractions" class="hover:text-white transition-colors">推薦景點</a></li>
+                    <li><a href="#simulator" class="hover:text-white transition-colors">能見度模擬</a></li>
+                </ul>
+            </div>
+
+            <!-- 專欄 3：實用資訊 -->
+            <div>
+                <h4 class="text-xs font-bold text-slate-200 tracking-widest uppercase mb-4">相關單位官網</h4>
+                <ul class="space-y-2 text-xs font-light">
+                    <li><a href="https://www.fujikyu-railway.jp/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors flex items-center">富士急行線 <i data-lucide="external-link" class="w-3 h-3 ml-1"></i></a></li>
+                    <li><a href="https://bus.fujikyu.co.jp/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors flex items-center">富士急行巴士 <i data-lucide="external-link" class="w-3 h-3 ml-1"></i></a></li>
+                    <li><a href="https://www.fujisan.ne.jp/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors flex items-center">河口湖觀光協會 <i data-lucide="external-link" class="w-3 h-3 ml-1"></i></a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- 底部版權宣告 -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800/60 pt-8 text-center text-[11px] text-slate-600">
+            <p>&copy; 2026 富士山河口湖旅遊指南. All Rights Reserved. Crafted with care for Mt. Fuji lovers.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript 邏輯與互動行為 -->
+    <script>
+        // 初始化 Lucide 圖標
+        document.addEventListener("DOMContentLoaded", function() {
+            lucide.createIcons();
+            // 載入預設季節
+            switchSeason('spring');
+            // 預設計算模擬器
+            calculateVisibility();
+            // 預設生成日程
+            generateItinerary();
+        });
+
+        // 導覽列手機版選單開關
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 點擊導覽列連結自動收合手機選單
+        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // ================= 季節切換 (Seasons Switcher) =================
+        const seasonData = {
+            spring: {
+                badge: '春季 | 4月中旬 - 4月下旬',
+                badgeClass: 'bg-rose-400 text-white',
+                temp: '平均：10°C - 18°C',
+                title: '春の華：櫻花與富士山的粉紅交響詩',
+                desc: '春天的河口湖是人氣最旺的季節。當櫻花盛開時，北岸的「櫻花步道」便形成一片粉紅色的世界。以漫天飛舞的粉嫩吉野櫻為前景，與遠方蓋著白雪的藍色富士山構成一幅最具日本代表性的經典畫面。',
+                spots: ['河口湖北岸櫻花步道', '新倉山淺間公園（忠靈塔）', '長崎公園'],
+                illustration: `
+                    <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 天空 -->
+                        <rect width="100" height="100" fill="#FFE5EC"/>
+                        <!-- 太陽 -->
+                        <circle cx="50" cy="45" r="25" fill="#FFA5B5" opacity="0.3"/>
+                        <!-- 富士山 -->
+                        <path d="M10 80 C35 80 40 30 50 30 C60 30 65 80 90 80 Z" fill="#2F5D8A"/>
+                        <path d="M38 52 C45 52 48 30 50 30 C52 30 55 52 62 52 C57 58 53 55 50 60 C47 55 43 58 38 52 Z" fill="#FFFFFF"/>
+                        <!-- 湖水 -->
+                        <rect y="80" width="100" height="20" fill="#3D5F8C"/>
+                        <line x1="10" y1="88" x2="90" y2="88" stroke="#FFFFFF" stroke-width="1" opacity="0.3"/>
+                        <!-- 櫻花裝飾 -->
+                        <circle cx="15" cy="20" r="6" fill="#FFB7C5"/>
+                        <circle cx="25" cy="25" r="4" fill="#FFA5B5"/>
+                        <circle cx="85" cy="20" r="5" fill="#FFB7C5"/>
+                        <circle cx="80" cy="30" r="7" fill="#FFA5B5"/>
+                    </svg>
+                `
+            },
+            summer: {
+                badge: '夏季 | 6月下旬 - 7月中旬',
+                badgeClass: 'bg-violet-500 text-white',
+                temp: '平均：18°C - 28°C',
+                title: '夏の薰：漫步於紫色浪漫薰衣草田',
+                desc: '夏天的河口湖綠意盎然。每年初夏在大石公園與八木崎公園舉辦的「河口湖香草節」，能看見大片盛開的紫色薰衣草如同毛毯般鋪開。夏天的富士山山頂雪融，展現出剛毅、深邃的夏山風貌。',
+                spots: ['大石公園 (薰衣草季)', '八木崎公園', '河口湖香草館'],
+                illustration: `
+                    <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 天空 -->
+                        <rect width="100" height="100" fill="#E8F1F5"/>
+                        <!-- 太陽 -->
+                        <circle cx="75" cy="25" r="10" fill="#FBC02D"/>
+                        <!-- 富士山(少雪/無雪) -->
+                        <path d="M10 80 C35 80 40 30 50 30 C60 30 65 80 90 80 Z" fill="#1C3144"/>
+                        <!-- 湖水 -->
+                        <rect y="80" width="100" height="20" fill="#2E5A88"/>
+                        <!-- 薰衣草花叢 -->
+                        <path d="M0 80 L30 65 L45 80 Z" fill="#7E57C2" opacity="0.8"/>
+                        <path d="M25 80 L60 60 L80 80 Z" fill="#9575CD" opacity="0.7"/>
+                        <path d="M50 80 L85 68 L100 80 Z" fill="#7E57C2" opacity="0.6"/>
+                    </svg>
+                `
+            },
+            autumn: {
+                badge: '秋季 | 11月上旬 - 11月下旬',
+                badgeClass: 'bg-amber-600 text-white',
+                temp: '平均：6°C - 14°C',
+                title: '秋の彩：紅楓迴廊與冠雪富士',
+                desc: '秋天，河口湖北岸著名的「楓葉迴廊」會被染成一片火紅。落葉鋪滿渠道，形成一條紅葉地毯。此時富士山頂也重新染上白雪，紅葉、雪山、碧湖三者交織成色彩最濃郁的日本絕景。',
+                spots: ['紅葉迴廊 (楓葉季)', '楓葉隧道 (長崎公園附近)', '留守岩（紅葉展望）'],
+                illustration: `
+                    <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 天空 -->
+                        <rect width="100" height="100" fill="#FFF2E6"/>
+                        <!-- 太陽 -->
+                        <circle cx="50" cy="45" r="18" fill="#FF8C00" opacity="0.4"/>
+                        <!-- 富士山 -->
+                        <path d="M10 80 C35 80 40 30 50 30 C60 30 65 80 90 80 Z" fill="#1C3A5E"/>
+                        <path d="M38 52 C45 52 48 30 50 30 C52 30 55 52 62 52 C57 58 53 55 50 60 C47 55 43 58 38 52 Z" fill="#FFFFFF"/>
+                        <!-- 湖水 -->
+                        <rect y="80" width="100" height="20" fill="#243D59"/>
+                        <!-- 紅葉剪影 -->
+                        <circle cx="15" cy="25" r="8" fill="#D32F2F"/>
+                        <circle cx="25" cy="35" r="6" fill="#F57C00"/>
+                        <circle cx="85" cy="30" r="9" fill="#D32F2F"/>
+                    </svg>
+                `
+            },
+            winter: {
+                badge: '冬季 | 12月 - 次年2月',
+                badgeClass: 'bg-sky-700 text-white',
+                temp: '平均：-3°C - 8°C',
+                title: '冬の澄：最容易見到富士山的澄澈晴空',
+                desc: '冬季是觀賞富士山「成功率最高」的季節，因為此時空氣最乾淨、水氣極少，晴空率居全年之冠。雄偉的富士山披上厚厚的銀白雪冠。1月中旬至2月下旬週末夜晚還會舉辦浪漫的「冬之煙火」。',
+                spots: ['大石公園 (雪景)', '河口湖大橋 (拍攝日出)', '冬之花火會場 (平井地區)'],
+                illustration: `
+                    <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 天空 -->
+                        <rect width="100" height="100" fill="#E1F5FE"/>
+                        <!-- 富士山(雪冠極大) -->
+                        <path d="M10 80 C35 80 40 30 50 30 C60 30 65 80 90 80 Z" fill="#0D47A1"/>
+                        <path d="M32 58 C41 58 45 30 50 30 C55 30 59 58 68 58 C62 68 56 62 50 72 C44 62 38 68 32 58 Z" fill="#FFFFFF"/>
+                        <!-- 湖水 -->
+                        <rect y="80" width="100" height="20" fill="#0B2B5C"/>
+                        <!-- 雪花 -->
+                        <circle cx="20" cy="15" r="1.5" fill="#FFFFFF"/>
+                        <circle cx="75" cy="18" r="1.5" fill="#FFFFFF"/>
+                        <circle cx="45" cy="10" r="1" fill="#FFFFFF"/>
+                        <circle cx="10" cy="40" r="1.2" fill="#FFFFFF"/>
+                        <circle cx="90" cy="45" r="1.2" fill="#FFFFFF"/>
+                    </svg>
+                `
+            }
+        };
+
+        function switchSeason(seasonKey) {
+            // 變更按鈕樣式
+            const buttons = ['spring', 'summer', 'autumn', 'winter'];
+            buttons.forEach(k => {
+                const btn = document.getElementById(`btn-${k}`);
+                if (k === seasonKey) {
+                    btn.classList.add('season-tab-active');
+                    btn.classList.remove('text-slate-600', 'hover:text-fuji-dark');
+                } else {
+                    btn.classList.remove('season-tab-active');
+                    btn.classList.add('text-slate-600', 'hover:text-fuji-dark');
+                }
+            });
+
+            // 取得對應資料
+            const data = seasonData[seasonKey];
+
+            // 動態更新內容
+            const badge = document.getElementById('season-badge');
+            badge.innerText = data.badge;
+            badge.className = `px-3 py-1 rounded-full text-xs font-bold tracking-widest ${data.badgeClass}`;
+
+            document.getElementById('season-temp').innerHTML = `<i data-lucide="thermometer" class="w-4 h-4 mr-1"></i> ${data.temp}`;
+            document.getElementById('season-title').innerText = data.title;
+            document.getElementById('season-desc').innerText = data.desc;
+
+            // 更新最佳景點清單
+            const spotsList = document.getElementById('season-spots');
+            spotsList.innerHTML = '';
+            
+            // 設定各季節圓點色彩
+            let bulletColorClass = 'bg-fuji-sakura';
+            if (seasonKey === 'summer') bulletColorClass = 'bg-fuji-lavender';
+            if (seasonKey === 'autumn') bulletColorClass = 'bg-fuji-maple';
+            if (seasonKey === 'winter') bulletColorClass = 'bg-blue-300';
+
+            data.spots.forEach(spot => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center';
+                li.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${bulletColorClass} mr-2"></span> ${spot}`;
+                spotsList.appendChild(li);
+            });
+
+            // 替換 SVG 插圖
+            document.getElementById('season-illustration-container').innerHTML = data.illustration;
+
+            // 重新刷新圖標
+            lucide.createIcons();
+        }
+
+        // ================= 天氣與能見度模擬器 (Simulator) =================
+        let currentWeather = 'sunny';
+
+        function setWeather(weatherKey) {
+            currentWeather = weatherKey;
+            
+            // 切換按鈕激活樣式
+            const weatherKeys = ['sunny', 'cloudy', 'rainy'];
+            weatherKeys.forEach(k => {
+                const btn = document.getElementById(`wea-${k}`);
+                if (k === weatherKey) {
+                    btn.className = "py-2.5 px-3 rounded-lg text-xs font-bold transition-all border border-amber-500 bg-amber-500 text-slate-950 flex flex-col items-center space-y-1";
+                } else {
+                    btn.className = "py-2.5 px-3 rounded-lg text-xs font-bold transition-all border border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-500 flex flex-col items-center space-y-1";
+                }
+            });
+
+            calculateVisibility();
+        }
+
+        function calculateVisibility() {
+            const month = parseInt(document.getElementById('sim-month').value);
+            const time = document.getElementById('sim-time').value;
+
+            // 月份基礎可見機率 (冬季最高，夏季最低)
+            // 1, 2, 11, 12月高; 6, 7, 8月低
+            const monthBaseRates = {
+                1: 82, 2: 78, 3: 65, 4: 50, 5: 42, 6: 25, 
+                7: 30, 8: 35, 9: 45, 10: 68, 11: 76, 12: 84
+            };
+
+            let baseRate = monthBaseRates[month];
+
+            // 根據天氣條件進行權重調整
+            let weatherMultiplier = 1.0;
+            if (currentWeather === 'sunny') {
+                weatherMultiplier = 1.2; // 晴天提高可見度
+            } else if (currentWeather === 'cloudy') {
+                weatherMultiplier = 0.4; // 多雲大幅下降
+            } else if (currentWeather === 'rainy') {
+                weatherMultiplier = 0.05; // 陰雨幾乎看不見
+            }
+
+            // 時段權重
+            let timeMultiplier = 1.0;
+            if (time === 'morning') {
+                timeMultiplier = 1.1; // 上午較佳
+            } else {
+                timeMultiplier = 0.8; // 下午易聚雲
+            }
+
+            // 計算最終機率
+            let finalRate = Math.round(baseRate * weatherMultiplier * timeMultiplier);
+            if (finalRate > 100) finalRate = 100;
+            if (finalRate < 0) finalRate = 0;
+
+            // 更新 UI 百分比
+            document.getElementById('visibility-rate').innerText = `${finalRate}%`;
+
+            // 更新星星推薦指數與提醒文字
+            const starSpan = document.getElementById('recommend-stars');
+            const adviceSpan = document.getElementById('sim-advice');
+
+            if (finalRate >= 80) {
+                starSpan.innerText = "★★★★★";
+                starSpan.className = "text-xl font-bold text-amber-400";
+                adviceSpan.innerText = "能見度極佳！非常容易看到壯麗的「逆富士」，請務必把握清晨 6-8 點前往北岸拍攝。";
+            } else if (finalRate >= 50) {
+                starSpan.innerText = "★★★★☆";
+                starSpan.className = "text-xl font-bold text-yellow-400";
+                adviceSpan.innerText = "露臉機率中等。山頂可能伴隨些許白雲飄浮，雖不算完美，但雲遮霧罩的富士山也極具仙氣！";
+            } else if (finalRate >= 20) {
+                starSpan.innerText = "★★☆☆☆";
+                starSpan.className = "text-xl font-bold text-slate-400";
+                adviceSpan.innerText = "機率較低，富士山可能會被厚重的山嵐遮擋。建議您可安排室內景點，如音樂盒之森美術館。";
+            } else {
+                starSpan.innerText = "★☆☆☆☆";
+                starSpan.className = "text-xl font-bold text-rose-500";
+                adviceSpan.innerText = "此時幾乎無法看到富士山。建議前往溫泉旅館泡湯，或在周邊享受精緻的餺飥麵(Hoto)美食。";
+            }
+
+            // ================= 改變視覺模擬畫面 (Visual Viewport Update) =================
+            const sky = document.getElementById('sim-sky');
+            const sun = document.getElementById('sim-sun');
+            const mtn = document.getElementById('sim-mountain');
+            const snow = document.getElementById('sim-snow');
+            const cloudHeavy = document.getElementById('sim-cloud-heavy');
+            const cloudMist = document.getElementById('sim-cloud-mist');
+            const cloud1 = document.getElementById('sim-cloud-1');
+            const cloud2 = document.getElementById('sim-cloud-2');
+
+            // 1. 時段影響天空與太陽
+            if (time === 'morning') {
+                // 朝陽晨曦 (粉橘紫漸層)
+                sky.className = "absolute inset-0 bg-gradient-to-b from-rose-400 via-amber-200 to-indigo-100 transition-all duration-700";
+                sun.className = "absolute top-[25%] left-[65%] w-12 h-12 rounded-full bg-rose-500 opacity-90 blur-[1px] transition-all duration-700 shadow-[0_0_20px_rgba(244,63,94,0.4)]";
+            } else {
+                // 午後半晴 (蔚藍到亮藍)
+                sky.className = "absolute inset-0 bg-gradient-to-b from-sky-400 to-sky-100 transition-all duration-700";
+                sun.className = "absolute top-[15%] left-[25%] w-14 h-14 rounded-full bg-amber-400 opacity-95 blur-[0.5px] transition-all duration-700";
+            }
+
+            // 2. 天氣與能見度影響雲層
+            if (currentWeather === 'sunny') {
+                cloudHeavy.className = "absolute inset-x-0 bottom-10 bg-white/70 h-16 blur-md transition-all duration-1000 transform translate-y-20 opacity-0";
+                cloudMist.className = "absolute inset-0 bg-slate-300/30 backdrop-blur-none transition-all duration-1000 opacity-0 pointer-events-none";
+                cloud1.className = "absolute top-[35%] -left-10 w-24 h-6 bg-white/40 rounded-full blur-sm transition-all duration-1000 translate-x-5";
+                cloud2.className = "absolute top-[45%] right-10 w-32 h-8 bg-white/40 rounded-full blur-sm transition-all duration-1000 -translate-x-5";
+            } else if (currentWeather === 'cloudy') {
+                cloudHeavy.className = "absolute inset-x-0 bottom-10 bg-white/70 h-16 blur-md transition-all duration-1000 transform translate-y-2 opacity-80 z-20";
+                cloudMist.className = "absolute inset-0 bg-slate-300/30 backdrop-blur-none transition-all duration-1000 opacity-20 pointer-events-none";
+                cloud1.className = "absolute top-[25%] left-24 w-40 h-10 bg-white/80 rounded-full blur-sm transition-all duration-1000 z-20";
+                cloud2.className = "absolute top-[32%] right-12 w-48 h-12 bg-white/70 rounded-full blur-sm transition-all duration-1000 z-20";
+            } else if (currentWeather === 'rainy') {
+                // 陰雨下大霧，全景霧化，山體隱形
+                sky.className = "absolute inset-0 bg-gradient-to-b from-slate-600 via-slate-500 to-slate-400 transition-all duration-700";
+                sun.className = "absolute top-[15%] left-[25%] w-14 h-14 rounded-full bg-white opacity-10 blur-xl transition-all duration-700";
+                cloudHeavy.className = "absolute inset-x-0 bottom-0 bg-slate-200/90 h-32 blur-md transition-all duration-1000 opacity-90 z-20";
+                cloudMist.className = "absolute inset-0 bg-slate-300/60 backdrop-blur-[4px] transition-all duration-1000 opacity-100 z-20 pointer-events-none";
+                cloud1.className = "absolute top-[10%] left-10 w-64 h-16 bg-white/40 rounded-full blur-md transition-all duration-1000 z-20";
+                cloud2.className = "absolute top-[25%] right-4 w-72 h-20 bg-white/35 rounded-full blur-md transition-all duration-1000 z-20";
+            }
+        }
+
+        // ================= 智能行程規劃器 (Smart Itinerary Planner) =================
+        const itineraryOptions = {
+            couple: {
+                chill: {
+                    nature: {
+                        tip: "情侶悠閒自然風光一日遊：行程不緊湊，能享受大自然與奢華咖啡，拍照極美。",
+                        steps: [
+                            { time: "09:30 - 10:30", title: "抵達河口湖站，搭乘紅線巴士直達大石公園", desc: "在清晨的陽光下，牽手散步於薰衣草與波波草花海中，欣賞無遮擋的富士山。" },
+                            { time: "11:00 - 13:00", title: "大石公園景觀餐廳 / 湖畔午餐與手工咖啡", desc: "在湖景第一排的景觀露台，享用在地食材製作的小點，放慢腳步聊聊天。" },
+                            { time: "13:30 - 15:30", title: "天上山全景纜車 & 天空鞦韆", desc: "搭乘纜車登上頂峰，一起在「天空鞦韆」上盪漾，留下以富士山為背景的甜蜜合照。" },
+                            { time: "16:00 - 17:30", title: "湖畔奢華溫泉飯店 日歸溫泉 (泡湯/賞夕陽)", desc: "前往著名的溫泉旅館，享受放鬆的足湯或日歸溫泉，眺望富士山夕陽。" }
+                        ]
+                    },
+                    culture: {
+                        tip: "浪漫文藝之旅：融合音樂盒博物館與日式庭園，兼具美感與悠閒。",
+                        steps: [
+                            { time: "10:00 - 12:00", title: "河口湖音樂盒之森美術館", desc: "走進歐洲風情的浪漫小鎮，欣賞百年管風琴演奏，並在盛開的玫瑰園中漫步。" },
+                            { time: "12:30 - 14:00", title: "美術館景觀餐廳優雅法式午餐", desc: "一邊聆聽音樂，一邊透過挑高落地窗欣賞河口湖與富士山。" },
+                            { time: "14:30 - 16:30", title: "久保田一竹美術館", desc: "參觀獲得米其林三星評價的絲綢染色大師個人美術館，欣賞極具震撼力的和服巨作，並在其絕美日式枯山水庭園中散步。" }
+                        ]
+                    }
+                },
+                active: {
+                    nature: {
+                        tip: "情侶充實大自然打卡一日遊：跑遍多個最熱門的富士山合照聖地！",
+                        steps: [
+                            { time: "08:30 - 10:30", title: "新倉山淺間公園 (忠靈塔挑戰)", desc: "早起避開人潮，挑戰 398 階階梯，拍下櫻花/楓葉、五重塔、富士山三合一的經典明信片美照。" },
+                            { time: "11:00 - 12:30", title: "下吉田「天梯小鎮」金鳥居與日川時計店", desc: "在富有昭和懷舊感的街道上，拍攝延伸感極佳的城市富士山街景。" },
+                            { time: "13:00 - 14:30", title: "河口湖大橋畔 享用河口湖名物：餺飥麵(Hoto)", desc: "品嚐在地手作、鋪滿南瓜與蔬菜的熱騰騰味噌粗麵，補充元氣。" },
+                            { time: "15:00 - 17:00", title: "大石公園與河口湖北岸櫻花步道散策", desc: "一路沿著北岸散步至落日，收集逆富士與美麗的湖畔波光。" }
+                        ]
+                    },
+                    culture: {
+                        tip: "充實打卡文藝一日遊：完美兼顧熱門文化與時尚打卡地標。",
+                        steps: [
+                            { time: "09:00 - 11:30", title: "富士急樂園 (絕叫快感)", desc: "如果體力好，先去體驗 1 小時最刺激的高空雲霄飛車，背靠富士山狂歡！" },
+                            { time: "12:00 - 14:00", title: "富士吉田「金鳥居」街區漫步 & 懷舊午餐", desc: "品嚐富士吉田傳統烏龍麵，隨後拍下懷舊鳥居與富士山的宏偉合影。" },
+                            { time: "14:30 - 16:30", title: "河口湖音樂盒之森美術館", desc: "欣賞沙畫音樂劇與噴泉水舞秀，盡享精緻下午茶。" }
+                        ]
+                    }
+                }
+            },
+            family: {
+                chill: {
+                    nature: {
+                        tip: "家庭悠閒大自然路線：無陡坡，老少咸宜，提供最舒適的交通動線。",
+                        steps: [
+                            { time: "10:00 - 11:30", title: "河口湖遊覽船「天晴號」", desc: "搭乘舒適寬敞、無障礙設計的遊覽船，從湖面上 360 度觀賞宏偉的富士山，長輩孩子都輕鬆。" },
+                            { time: "12:00 - 13:30", title: "湖畔景觀餐廳 享用特色天婦羅", desc: "選擇寬敞且有塌塌米包廂的餐廳，給長輩與小孩最好的休息環境。" },
+                            { time: "14:00 - 15:30", title: "八木崎公園舒適草地散步", desc: "相比大石公園，這裡遊客較少，有極大的草坪。夏天開滿薰衣草，適合小孩跑跳、長輩散步。" }
+                        ]
+                    },
+                    culture: {
+                        tip: "家庭舒適文化體驗之旅：以互動、好玩、高舒適度為核心。",
+                        steps: [
+                            { time: "10:00 - 12:00", title: "河口湖自然生活館 (大石公園內)", desc: "在室內參觀果醬DIY工坊，全家人一起體驗手工製作當季水果果醬，帶回精緻紀念品。" },
+                            { time: "12:30 - 14:00", title: "生活館旁景觀餐廳 (餺飥不動)", desc: "在雲朵造型的神奇建築物內，全家共同分享熱騰騰的巨無霸蔬菜大麵鍋。" },
+                            { time: "14:30 - 16:00", title: "天上山纜車 (直達免攀爬)", desc: "搭乘纜車直接登頂，老人家可在展望台喝熱茶，小孩可以尋找山上可愛的兔子雕像。" }
+                        ]
+                    }
+                },
+                active: {
+                    nature: {
+                        tip: "家庭充實自然探險：適合體力充沛的活力家庭！",
+                        steps: [
+                            { time: "09:30 - 11:30", title: "西湖療癒之里根場 (茅盔屋頂合掌村)", desc: "重現古日本農村風情。全家可以一起租借和服或武士盔甲，在富士山下拍照，極具趣味。" },
+                            { time: "12:00 - 13:30", title: "根場特色蕎麥麵午餐", desc: "在充滿歷史感的古民宅內享用山梨手工蕎麥麵與野菜天婦羅。" },
+                            { time: "14:00 - 16:30", title: "鳴澤冰穴 & 富岳風穴 (地底森林探險)", desc: "走進终年結冰的熔岩洞穴，夏天是完美的天然避暑勝地。洞內道路略窄，像極了神秘大冒險！" }
+                        ]
+                    },
+                    culture: {
+                        tip: "家庭充實文化探險：充實、充滿驚奇的日式手工與傳統一日遊。",
+                        steps: [
+                            { time: "09:30 - 11:30", title: "河口湖工藝館 - 手作體驗", desc: "家庭成員可以動手做彩繪玻璃、噴砂玻璃杯或日本傳統印染，留下獨一無二的家庭旅遊回憶。" },
+                            { time: "12:00 - 13:30", title: "富士山景迴轉壽司午餐", desc: "品嚐來自靜岡及鄰近海域的新鮮漁獲，小朋友也能吃得很開心。" },
+                            { time: "14:00 - 16:00", title: "西湖合掌村體驗傳統竹器與手工紙", desc: "探訪森林古聚落，動手折手工紙，體驗古日本村民的工藝文化。" }
+                        ]
+                    }
+                }
+            },
+            solo: {
+                chill: {
+                    nature: {
+                        tip: "個人旅行·悠閒自然攝影：不匆不忙，追逐最完美的光影與孤獨感。",
+                        steps: [
+                            { time: "06:00 - 08:00", title: "產屋崎 (Ubuyagasaki) 逆富士日出攝影", desc: "清晨無人、無風，此處是捕捉清晨第一道曙光照亮富士山雪頂的最佳位置。" },
+                            { time: "08:30 - 10:00", title: "湖畔青年旅社 / 獨立咖啡廳享用晨間手沖", desc: "在咖啡香氣中整理相機，寫寫旅遊日記，享受純粹的個人平靜。" },
+                            { time: "11:00 - 13:30", title: "河口湖大橋徒步跨越 & 沿湖漫步", desc: "背上背包徒步跨越宏偉的大橋，從湖中心的獨特高度與視角拍攝富士山。" },
+                            { time: "14:00 - 16:30", title: "長崎公園 (Nagasaki Park) 僻靜讀書與冥想", desc: "避開喧囂團客，坐在湖畔的長椅上聽歌、閱讀，享受清風吹拂，眼前只有頂天立地的富士山。" }
+                        ]
+                    },
+                    culture: {
+                        tip: "個人旅行·文藝深度之旅：極具美學含金量的深刻旅行。",
+                        steps: [
+                            { time: "09:30 - 11:30", title: "久保田一竹美術館 (Michelin 3-star)", desc: "獨自探索猶如高第建築般奇幻的高山美術館。靜靜感受那費時數十年、由一件件巨型和服拼湊而成的「光之交響樂」。" },
+                            { time: "12:00 - 13:30", title: "山梨特色 Hoto 蔬菜麵", desc: "去當地人愛去的老字號小店，體驗大鐵鍋帶來的原始純樸滋味。" },
+                            { time: "14:00 - 16:30", title: "河口湖美術館 (本地藝術展)", desc: "安靜欣賞描繪富士山歷史與現代視角的日本畫與攝影展，體會日本匠人精神。" }
+                        ]
+                    }
+                },
+                active: {
+                    nature: {
+                        tip: "個人旅行·極限追景鐵人行程：挑戰雙腳，拍爆記憶卡！",
+                        steps: [
+                            { time: "05:30 - 07:30", title: "新倉山淺間公園 清晨日出攻頂", desc: "天亮前出發，趕第一道曙光照在忠靈塔和雪山頂上，此時光影最為完美、遊客也最稀少。" },
+                            { time: "08:00 - 10:00", title: "徒步或租自行車環湖 (北岸出發)", desc: "租台電動自行車，從北岸、大石公園一路騎往西湖，在沒人打擾的隱密角落，拍下無障礙富士山。" },
+                            { time: "11:00 - 13:30", title: "西湖「青木原樹海」與「冰穴風穴」探險", desc: "騎車深入被譽為神祕之森的原始茂密林海，走下萬年冰層，體會極致的大地生命力。" },
+                            { time: "14:00 - 16:30", title: "天上山山頂「三峠登山道」輕健行", desc: "不搭纜車，沿著健行步道攀登，體會雙腳征服視野的暢快，登頂後狂拍全景。" }
+                        ]
+                    },
+                    culture: {
+                        tip: "個人旅行·充實文化打卡：深度感受懷舊日本街景與當代文化。",
+                        steps: [
+                            { time: "09:00 - 11:00", title: "富士吉田「金鳥居」與月江寺昭和老街", desc: "獨自探索具有強烈昭和感、褪色看板與招牌的老街，拍下充滿故事感、與富士山重疊的都市日常。" },
+                            { time: "11:30 - 13:00", title: "下吉田名物「吉田烏龍麵」 (極具嚼勁)", desc: "品嚐以全日本最具彈性、最硬、最有嚼勁著稱的傳統馬肉烏龍麵。" },
+                            { time: "13:30 - 15:30", title: "河口湖音樂盒之森美術館", desc: "沉浸在自動風琴與沙畫交織的奇幻樂音中，為自己拍一張精美的藝術紀念照。" }
+                        ]
+                    }
+                }
+            }
+        };
+
+        function generateItinerary() {
+            const partner = document.getElementById('plan-partner').value;
+            const pace = document.getElementById('plan-pace').value;
+            const focus = document.getElementById('plan-focus').value;
+
+            // 取得對應行程
+            const plan = itineraryOptions[partner][pace][focus];
+
+            // 更新建議提示文字
+            document.getElementById('planner-tip-text').innerText = plan.tip;
+
+            // 繪製時間軸
+            const timeline = document.getElementById('itinerary-timeline');
+            timeline.innerHTML = ''; // 清空舊內容
+
+            plan.steps.forEach((step, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'relative group';
+
+                stepDiv.innerHTML = `
+                    <!-- 圓點 -->
+                    <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full border-2 border-fuji-blue bg-white group-hover:bg-fuji-blue transition-colors duration-300"></div>
+                    
+                    <div class="space-y-1">
+                        <span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-fuji-blue text-[10px] font-bold tracking-wider">${step.time}</span>
+                        <h4 class="text-base font-bold text-fuji-dark group-hover:text-fuji-blue transition-colors duration-200">${step.title}</h4>
+                        <p class="text-xs text-slate-500 font-light leading-relaxed">${step.desc}</p>
+                    </div>
+                `;
+
+                timeline.appendChild(stepDiv);
+            });
+        }
+    </script>
+</body>
+</html>

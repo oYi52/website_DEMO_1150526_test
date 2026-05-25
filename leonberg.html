@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探索萊昂貝格 | Leonberg Interactive Guide</title>
+    <!-- Tailwind CSS for modern responsive utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Playfair Display for historical/modern typography contrast -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        leonberg: {
+                            gold: '#D4AF37',
+                            burgundy: '#8B263E',
+                            dark: '#1C0D12',
+                            sage: '#F4F1EA',
+                            accent: '#E5A93B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAF9F6;
+        }
+        /* Custom scrollbar matching Leonberg theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F4F1EA;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8B263E;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #731E32;
+        }
+    </style>
+</head>
+<body class="text-stone-800 antialiased overflow-x-hidden">
+
+    <nav class="fixed top-0 left-0 w-full z-50 bg-stone-900/90 backdrop-blur-md border-b border-stone-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-3 text-white group">
+                <!-- Golden Lion Emblem SVG (Leonberg Crest Motif) -->
+                <svg class="w-8 h-8 text-leonberg-gold transition-transform duration-300 group-hover:scale-110" viewBox="0 0 100 100" fill="currentColor">
+                    <path d="M50,10 C27.9,10 10,27.9 10,50 C10,72.1 27.9,90 50,90 C72.1,90 90,72.1 90,50 C90,27.9 72.1,10 50,10 Z M65,45 C65,48.3 63.3,51 61,51 C58.7,51 57,48.3 57,45 C57,41.7 58.7,39 61,39 C63.3,39 65,41.7 65,45 Z M39,45 C39,48.3 37.3,51 35,51 C32.7,51 31,48.3 31,45 C31,41.7 32.7,39 35,39 C37.3,39 39,41.7 39,45 Z M50,55 C42,55 35.8,61 35,68 L65,68 C64.2,61 58,55 50,55 Z" opacity="0.1"/>
+                    <path d="M52,30 C52,25 48,22 45,25 C42,28 43,33 46,35 C43,37 38,36 36,40 C34,44 38,48 42,46 C39,49 35,53 37,57 C39,61 44,59 47,55 C45,59 43,65 47,67 C51,69 53,64 53,59 C54,63 57,67 61,65 C65,63 64,57 60,54 C63,52 67,49 66,45 C65,41 60,42 57,45 C59,41 61,36 58,33 C55,30 52,32 52,30 Z" />
+                </svg>
+                <span class="font-serif text-xl font-bold tracking-wider group-hover:text-leonberg-gold transition-colors duration-300">LEONBERG</span>
+            </a>
+            <div class="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
+                <a href="#specialties" class="text-stone-300 hover:text-leonberg-gold transition-colors duration-200">在地特產</a>
+                <a href="#architecture" class="text-stone-300 hover:text-leonberg-gold transition-colors duration-200">特色建築</a>
+                <a href="#transport" class="text-stone-300 hover:text-leonberg-gold transition-colors duration-200">交通指南</a>
+                <a href="#itinerary" class="text-stone-300 hover:text-leonberg-gold transition-colors duration-200">推薦一日遊</a>
+            </div>
+            <a href="#itinerary" class="bg-leonberg-burgundy hover:bg-leonberg-burgundy/80 text-white text-xs font-semibold px-4 py-2.5 rounded-full uppercase tracking-wider shadow-lg transition-transform duration-300 hover:scale-105">
+                規劃行程
+            </a>
+        </div>
+    </nav>
+
+    <header class="relative w-full h-screen bg-stone-950 overflow-hidden flex flex-col justify-center items-center">
+        <!-- Interactive Interactive Canvas Background -->
+        <canvas id="heroCanvas" class="absolute inset-0 w-full h-full z-0 pointer-events-auto cursor-crosshair"></canvas>
+        
+        <!-- Deep Radial Overlay to enhance text readability -->
+        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent z-10 pointer-events-none"></div>
+
+        <div class="relative z-20 text-center px-6 max-w-4xl mx-auto flex flex-col items-center pointer-events-none">
+            <span class="text-leonberg-gold text-sm md:text-base font-semibold tracking-[0.25em] uppercase mb-4 opacity-0 transform translate-y-4 animate-fade-in" style="animation: fadeInUp 0.8s forwards 0.2s;">
+                南德最美的文藝復興祕境
+            </span>
+            <h1 class="font-serif text-5xl md:text-7xl font-bold text-white tracking-wide leading-tight mb-6 opacity-0" style="animation: fadeInUp 0.8s forwards 0.4s;">
+                漫遊．<span class="text-leonberg-gold">萊昂貝格</span>
+            </h1>
+            <p class="text-stone-300 text-lg md:text-xl font-light max-w-2xl leading-relaxed mb-10 opacity-0" style="animation: fadeInUp 0.8s forwards 0.6s;">
+                在歷史悠久的木桁架老城區與全德唯一的「苦橙園」裡，與威風廩廩的萊昂貝格犬相遇，感受巴登-符騰堡州的文藝美學。
+            </p>
+            <div class="flex space-x-4 opacity-0 pointer-events-auto" style="animation: fadeInUp 0.8s forwards 0.8s;">
+                <a href="#specialties" class="bg-leonberg-burgundy hover:bg-leonberg-burgundy/90 text-white text-sm font-medium px-8 py-3.5 rounded-full shadow-xl hover:shadow-leonberg-burgundy/20 transform transition duration-300 hover:-translate-y-1">
+                    開始探索之旅
+                </a>
+                <a href="#architecture" class="border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 text-white text-sm font-medium px-8 py-3.5 rounded-full transition duration-300 backdrop-blur-sm">
+                    漫步歷史古蹟
+                </a>
+            </div>
+        </div>
+
+        <!-- Mouse Instruction indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center space-y-2 animate-bounce pointer-events-none">
+            <span class="text-xs text-stone-400 font-light tracking-widest">滑鼠輕移，與橙花共舞</span>
+            <svg class="w-5 h-5 text-leonberg-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+        </div>
+    </header>
+
+    <section id="specialties" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-20">
+            <span class="text-leonberg-burgundy font-semibold text-xs tracking-widest uppercase block mb-3">Local Treasures</span>
+            <h2 class="font-serif text-3xl md:text-5xl font-bold text-stone-900 mb-6">城市特產與經典文化</h2>
+            <div class="w-16 h-1 bg-leonberg-gold mx-auto rounded-full"></div>
+            <p class="text-stone-600 mt-6 leading-relaxed">
+                Leonberg 的驕傲不僅來自於建築，更深深烙印在牠的名犬、在地的餐盤、與浪漫文人的詩篇之中。
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <!-- Specialty Card 1 -->
+            <div class="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 group hover:-translate-y-2">
+                <div class="w-20 h-20 bg-leonberg-sage rounded-2xl flex items-center justify-center text-leonberg-burgundy mb-8 group-hover:bg-leonberg-burgundy group-hover:text-white transition-all duration-300">
+                    <!-- Leonberger Dog Vector Icon -->
+                    <svg class="w-12 h-12" viewBox="0 0 100 100" fill="currentColor">
+                        <path d="M40,25 C35,25 31,28 32,32 C33,36 30,40 26,40 C22,40 20,36 18,40 C16,44 18,48 22,50 C18,52 14,56 16,62 C18,68 25,72 32,70 C35,74 40,78 45,78 C52,78 58,74 62,70 C66,74 72,78 78,78 C85,78 90,74 92,70 C94,66 90,62 86,62 C90,56 94,52 92,48 C90,44 86,44 82,46 C80,42 78,38 74,38 C70,38 68,42 64,40 C62,38 60,34 56,34 C52,34 48,38 46,38 C44,34 44,25 40,25 Z M42,40 C44,40 46,42 46,44 C46,46 44,48 42,48 C40,48 38,46 38,44 C38,42 40,40 42,40 Z M68,40 C70,40 72,42 72,44 C72,46 70,48 68,48 C66,48 64,46 64,44 C64,42 66,40 68,40 Z" />
+                    </svg>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-stone-900 mb-4 group-hover:text-leonberg-burgundy transition-colors duration-200">萊昂貝格犬 Leonberger</h3>
+                <p class="text-stone-600 leading-relaxed text-sm mb-6">
+                    在 19 世紀 40 年代，萊昂貝格市議員海因里希·埃斯格成功培育出這種巨型神犬。牠擁有如獅子般華麗厚實的金黃色鬃毛，體格強健卻性格溫柔、沉穩且極具親和力，成為象徵城市的優雅大使。
+                </p>
+                <div class="h-1 w-10 bg-leonberg-gold rounded transition-all duration-300 group-hover:w-full"></div>
+            </div>
+
+            <!-- Specialty Card 2 -->
+            <div class="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 group hover:-translate-y-2">
+                <div class="w-20 h-20 bg-leonberg-sage rounded-2xl flex items-center justify-center text-leonberg-burgundy mb-8 group-hover:bg-leonberg-burgundy group-hover:text-white transition-all duration-300">
+                    <!-- Swabian Gastronomy SVG Icon (Steaming dumpling) -->
+                    <svg class="w-12 h-12" viewBox="0 0 100 100" fill="currentColor">
+                        <path d="M20,60 C20,70 30,75 50,75 C70,75 80,70 80,60 L85,45 C85,42 80,40 50,40 C20,40 15,42 15,45 Z M50,15 C52,15 54,20 54,25 C54,30 50,35 46,35 C42,35 40,30 40,25 C40,20 48,15 50,15 Z M32,20 C34,20 36,24 36,28 C36,32 32,36 28,36 C24,36 22,32 22,28 C22,24 30,20 32,20 Z" />
+                    </svg>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-stone-900 mb-4 group-hover:text-leonberg-burgundy transition-colors duration-200">施瓦本方餃 Maultaschen</h3>
+                <p class="text-stone-600 leading-relaxed text-sm mb-6">
+                    施瓦本（Swabia）地區的國寶級美食。精緻的麵皮包裹著碎肉、菠菜、麵包屑與香料的豐厚內餡，相傳是修道院修士在四旬齋期發明的，被幽默地稱為「上帝瞞過之物」，佐以奶油煎洋蔥，口感絕佳。
+                </p>
+                <div class="h-1 w-10 bg-leonberg-gold rounded transition-all duration-300 group-hover:w-full"></div>
+            </div>
+
+            <!-- Specialty Card 3 -->
+            <div class="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 group hover:-translate-y-2">
+                <div class="w-20 h-20 bg-leonberg-sage rounded-2xl flex items-center justify-center text-leonberg-burgundy mb-8 group-hover:bg-leonberg-burgundy group-hover:text-white transition-all duration-300">
+                    <!-- Poet/Quill Quill Pen Vector Icon -->
+                    <svg class="w-12 h-12" viewBox="0 0 100 100" fill="currentColor">
+                        <path d="M80,20 C70,20 40,50 30,65 L25,75 L35,70 C50,60 80,30 80,20 Z M20,80 C20,80 15,85 10,90 L20,90 C25,85 20,80 20,80 Z" />
+                    </svg>
+                </div>
+                <h3 class="font-serif text-2xl font-bold text-stone-900 mb-4 group-hover:text-leonberg-burgundy transition-colors duration-200">浪漫詩歌與文人遺產</h3>
+                <p class="text-stone-600 leading-relaxed text-sm mb-6">
+                    此地為浪漫主義詩人克里斯蒂安·瓦格納（Christian Wagner）的故鄉。他的詩作深情禮讚自然野花與大地生靈。造訪坐落於市內的瓦格納故居與紀念館，細細品味施瓦本文化的纖細與永恆詩意。
+                </p>
+                <div class="h-1 w-10 bg-leonberg-gold rounded transition-all duration-300 group-hover:w-full"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="py-24 bg-stone-900 text-white relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-start lg:items-end justify-between mb-16">
+                <div class="max-w-2xl">
+                    <span class="text-leonberg-gold font-semibold text-xs tracking-widest uppercase block mb-3">Historical Landmarks</span>
+                    <h2 class="font-serif text-3xl md:text-5xl font-bold mb-4">走進中世紀：特色建築</h2>
+                    <p class="text-stone-400">穿越回 16 世紀，拜訪精緻的皇家花園與保存完好的木桁架，感受巴登-符騰堡邦絕無僅有的歷史風華。</p>
+                </div>
+                <div class="w-24 h-1 bg-leonberg-gold rounded-full mt-4 lg:mt-0"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <!-- Architecture Card 1 -->
+                <div class="bg-stone-950/60 rounded-3xl overflow-hidden border border-stone-800 transition-all duration-300 hover:border-leonberg-gold/30 group flex flex-col h-full">
+                    <div class="p-8 bg-stone-950 flex items-center justify-center border-b border-stone-800 h-64">
+                        <!-- Custom SVG: Pomeranzengarten Fountain & Hedge representation -->
+                        <svg class="w-48 h-48 text-leonberg-gold opacity-80 group-hover:scale-105 transition-transform duration-500" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="10" y="70" width="80" height="20" rx="5" fill="#1C0D12"/>
+                            <!-- Fountain center -->
+                            <line x1="50" y1="70" x2="50" y2="35" stroke-dasharray="1 1" />
+                            <path d="M50,35 Q40,30 30,50 M50,35 Q60,30 70,50 M50,45 Q42,42 35,55 M50,45 Q58,42 65,55" />
+                            <!-- Oranges -->
+                            <circle cx="20" cy="80" r="3" fill="#E5A93B"/>
+                            <circle cx="80" cy="80" r="3" fill="#E5A93B"/>
+                            <circle cx="50" cy="80" r="3.5" fill="#E5A93B"/>
+                            <!-- Garden terraces -->
+                            <path d="M15,70 L25,55 L75,55 L85,70 Z" fill="rgba(212, 175, 55, 0.1)"/>
+                            <path d="M25,55 L35,45 L65,45 L75,55 Z" fill="rgba(212, 175, 55, 0.15)"/>
+                        </svg>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-leonberg-gold font-semibold uppercase tracking-widest block mb-2">全德唯一文藝復興花園</span>
+                            <h3 class="font-serif text-2xl font-bold mb-4">苦橙園城堡花園</h3>
+                            <p class="text-stone-400 text-sm leading-relaxed mb-6">
+                                興建於 1609 年，是全德境內唯一保存極為完整的文藝復興晚期梯田式花園。細緻排列的苦橙樹、對稱完美的幾何花壇與淙淙的雕花噴泉，將 17 世紀宮廷美學凝結於此。
+                            </p>
+                        </div>
+                        <span class="text-leonberg-gold text-xs font-semibold tracking-wider flex items-center group-hover:translate-x-2 transition-transform duration-300">
+                            Pomeranzengarten ↗
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Architecture Card 2 -->
+                <div class="bg-stone-950/60 rounded-3xl overflow-hidden border border-stone-800 transition-all duration-300 hover:border-leonberg-gold/30 group flex flex-col h-full">
+                    <div class="p-8 bg-stone-950 flex items-center justify-center border-b border-stone-800 h-64">
+                        <!-- Custom SVG: Half-timbered Altstadt House -->
+                        <svg class="w-48 h-48 text-leonberg-gold opacity-80 group-hover:scale-105 transition-transform duration-500" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <!-- Roof -->
+                            <polygon points="50,10 10,45 90,45" fill="#1C0D12"/>
+                            <!-- House structure -->
+                            <rect x="20" y="45" width="60" height="45" fill="rgba(212, 175, 55, 0.05)"/>
+                            <!-- Beams (Fachwerk pattern) -->
+                            <line x1="20" y1="45" x2="80" y2="90" stroke-width="2"/>
+                            <line x1="80" y1="45" x2="20" y2="90" stroke-width="2"/>
+                            <line x1="50" y1="10" x2="50" y2="90" />
+                            <line x1="20" y1="67" x2="80" y2="67" />
+                            <!-- Windows -->
+                            <rect x="30" y="52" width="10" height="10" fill="#1C0D12"/>
+                            <rect x="60" y="52" width="10" height="10" fill="#1C0D12"/>
+                            <rect x="30" y="72" width="10" height="10" fill="#1C0D12"/>
+                            <rect x="60" y="72" width="10" height="10" fill="#1C0D12"/>
+                        </svg>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-leonberg-gold font-semibold uppercase tracking-widest block mb-2">中世紀老城核心</span>
+                            <h3 class="font-serif text-2xl font-bold mb-4">老城木桁架廣場</h3>
+                            <p class="text-stone-400 text-sm leading-relaxed mb-6">
+                                老城集市廣場 (Marktplatz) 四周環繞著無比精緻的木桁架結構建築（Fachwerkhäuser），其色彩斑斕的斜木交叉幾何結構，與高聳的市政廳，共同傾訴著這座老城的富裕歷史。
+                            </p>
+                        </div>
+                        <span class="text-leonberg-gold text-xs font-semibold tracking-wider flex items-center group-hover:translate-x-2 transition-transform duration-300">
+                            Altstadt Marktplatz ↗
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Architecture Card 3 -->
+                <div class="bg-stone-950/60 rounded-3xl overflow-hidden border border-stone-800 transition-all duration-300 hover:border-leonberg-gold/30 group flex flex-col h-full">
+                    <div class="p-8 bg-stone-950 flex items-center justify-center border-b border-stone-800 h-64">
+                        <!-- Custom SVG: Engelbergturm Tower -->
+                        <svg class="w-48 h-48 text-leonberg-gold opacity-80 group-hover:scale-105 transition-transform duration-500" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <!-- Hills -->
+                            <path d="M10,85 Q50,75 90,85" />
+                            <!-- Tower base -->
+                            <rect x="42" y="30" width="16" height="55" fill="rgba(212, 175, 55, 0.05)"/>
+                            <!-- Tower top/balcony -->
+                            <polygon points="38,30 62,30 50,15" fill="#1C0D12"/>
+                            <line x1="36" y1="30" x2="64" y2="30" stroke-width="2.5" />
+                            <circle cx="50" cy="23" r="1.5" fill="#D4AF37" />
+                            <!-- Windows along tower -->
+                            <rect x="48" y="40" width="4" height="6" />
+                            <rect x="48" y="55" width="4" height="6" />
+                            <rect x="48" y="70" width="4" height="6" />
+                        </svg>
+                    </div>
+                    <div class="p-8 flex-grow flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-leonberg-gold font-semibold uppercase tracking-widest block mb-2">守望城市的巨人</span>
+                            <h3 class="font-serif text-2xl font-bold mb-4">恩格爾貝格展望塔</h3>
+                            <p class="text-stone-400 text-sm leading-relaxed mb-6">
+                                座落於山頂的 Engelbergturm 是萊昂貝格不可忽視的守護標誌。這裡原是 19 世紀早期建造的水塔與軍事哨點，如今成為遊客俯瞰整座山谷、遠眺黑森林邊緣的最佳展望點。
+                            </p>
+                        </div>
+                        <span class="text-leonberg-gold text-xs font-semibold tracking-wider flex items-center group-hover:translate-x-2 transition-transform duration-300">
+                            Engelbergturm ↗
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="transport" class="py-24 bg-leonberg-sage relative overflow-hidden">
+        <!-- Floating ambient light -->
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-leonberg-gold/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-leonberg-burgundy/5 rounded-full blur-3xl"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <span class="text-leonberg-burgundy font-semibold text-xs tracking-widest uppercase block mb-3">Seamless Access</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold text-stone-900 mb-6">抵達與在地交通指南</h2>
+                <div class="w-16 h-1 bg-leonberg-gold mx-auto rounded-full"></div>
+            </div>
+
+            <!-- Grid of transportation options with modern interactive panel -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                <!-- Transport Box 1 -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-12 h-12 bg-leonberg-burgundy/10 text-leonberg-burgundy rounded-xl flex items-center justify-center">
+                            <!-- Train Icon SVG -->
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="4" y="3" width="16" height="14" rx="2" />
+                                <path d="M4 11h16M9 17l-2 4M15 17l2 4M8 7h8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-stone-900">斯圖加特 S-Bahn 直達</h3>
+                    </div>
+                    <p class="text-stone-600 text-sm leading-relaxed">
+                        從**斯圖加特中央車站 (Stuttgart Hbf)** 出發，搭乘 **S6 或 S60** 線地鐵，大約只需 22 分鐘即可直達 Leonberg 火車站，平均每 15 分鐘一班車，非常輕鬆便利。
+                    </p>
+                </div>
+
+                <!-- Transport Box 2 -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-12 h-12 bg-leonberg-burgundy/10 text-leonberg-burgundy rounded-xl flex items-center justify-center">
+                            <!-- Car/Highway Icon SVG -->
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="3" y="11" width="18" height="10" rx="2" />
+                                <path d="M12 2v6M9 5h6M7 11l2-6h6l2 6" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-stone-900">自駕與高速樞紐 (Autobahn)</h3>
+                    </div>
+                    <p class="text-stone-600 text-sm leading-relaxed">
+                        萊昂貝格緊靠著德國極為關鍵的 A8（東西向，通往慕尼黑或卡爾斯魯厄）與 A81（南北向）高速公路交叉口（Leonberg Dreieck）。不論從哪個方向前來，公路旅行都無比順暢。
+                    </p>
+                </div>
+
+                <!-- Transport Box 3 -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-12 h-12 bg-leonberg-burgundy/10 text-leonberg-burgundy rounded-xl flex items-center justify-center">
+                            <!-- Bicycle Icon SVG -->
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="5" cy="18" r="3" />
+                                <circle cx="19" cy="18" r="3" />
+                                <path d="M12 4V8M19 18l-4-6h-5L5 18M12 8l-4 4h5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-serif text-xl font-bold text-stone-900">自行車與徒步微旅遊</h3>
+                    </div>
+                    <p class="text-stone-600 text-sm leading-relaxed">
+                        火車站距離歷史老城區約 15 分鐘步行路程。這裡也是施瓦本「七磨坊谷」與綠洲健行步道的起點，騎著租借的單車（RegioRad）漫遊最是悠閒。
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-stone-900 rounded-3xl p-8 md:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="max-w-md">
+                    <span class="text-leonberg-gold text-xs font-semibold uppercase tracking-widest block mb-2">Travel Planning Tool</span>
+                    <h3 class="font-serif text-2xl md:text-3xl font-bold mb-4">預估您的旅程時間</h3>
+                    <p class="text-stone-400 text-sm">選擇出發地點，估計您與這座美麗歷史古城的距離！</p>
+                </div>
+                <div class="w-full md:w-auto flex flex-col sm:flex-row gap-4">
+                    <div class="relative">
+                        <select id="startPoint" class="w-full sm:w-64 bg-stone-800 text-white border border-stone-700 px-5 py-3 rounded-xl focus:outline-none focus:border-leonberg-gold appearance-none">
+                            <option value="stuttgart-hbf">斯圖加特中央車站</option>
+                            <option value="stuttgart-airport">斯圖加特國際機場</option>
+                            <option value="ludwigsburg">路德維希堡 (Ludwigsburg)</option>
+                            <option value="karlsruhe">卡爾斯魯厄 (Karlsruhe)</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-stone-400">
+                            ▼
+                        </div>
+                    </div>
+                    <button onclick="calculateTime()" class="bg-leonberg-gold hover:bg-leonberg-gold/90 text-stone-950 font-bold px-8 py-3 rounded-xl transition duration-300">
+                        立刻試算
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Result display panel -->
+            <div id="calcResult" class="mt-6 p-6 bg-white rounded-2xl shadow-inner border border-stone-200 hidden max-w-xl mx-auto text-center transform transition duration-500 scale-95 opacity-0">
+                <p id="calcText" class="text-stone-800 font-medium"></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="itinerary" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-20">
+            <span class="text-leonberg-burgundy font-semibold text-xs tracking-widest uppercase block mb-3">Curated 1-Day Journey</span>
+            <h2 class="font-serif text-3xl md:text-5xl font-bold text-stone-900 mb-6">推薦一日遊經典行程</h2>
+            <div class="w-16 h-1 bg-leonberg-gold mx-auto rounded-full"></div>
+            <p class="text-stone-600 mt-6 leading-relaxed">
+                這是最完美的慢旅行節奏，用一天時間，將大自然、浪漫宮廷、中世紀風貌與南德美食一網打盡。
+            </p>
+        </div>
+
+        <!-- Interactive timeline layout -->
+        <div class="relative border-l-2 border-stone-200 ml-4 md:ml-32 py-4 space-y-16">
+            
+            <!-- Timeline Item 1 -->
+            <div class="relative flex flex-col md:flex-row items-start md:items-center">
+                <!-- Marker -->
+                <div class="absolute -left-[11px] md:-left-[11px] w-5 h-5 bg-leonberg-gold rounded-full border-4 border-white shadow-sm"></div>
+                <!-- Time Label -->
+                <div class="md:absolute md:-left-28 font-serif text-lg font-bold text-leonberg-burgundy mb-2 md:mb-0">09:30 AM</div>
+                <!-- Content Panel -->
+                <div class="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm md:ml-12 w-full max-w-3xl group hover:shadow-md transition-shadow duration-300">
+                    <span class="text-xs text-leonberg-gold font-semibold uppercase tracking-widest block mb-2">第一站：老城晨光與集市廣場</span>
+                    <h3 class="font-serif text-xl font-bold text-stone-900 mb-3">晨光漫步與傳統咖啡</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                        抵達 Leonberg 火車站後步行 15 分鐘至歷史核心區。集市廣場上，色彩亮麗的木桁架建築矗立在陽光中，此時在市集廣場的老咖啡館外點一杯拿鐵，享受德式安詳的早晨。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 2 -->
+            <div class="relative flex flex-col md:flex-row items-start md:items-center">
+                <!-- Marker -->
+                <div class="absolute -left-[11px] md:-left-[11px] w-5 h-5 bg-leonberg-burgundy rounded-full border-4 border-white shadow-sm"></div>
+                <!-- Time Label -->
+                <div class="md:absolute md:-left-28 font-serif text-lg font-bold text-leonberg-burgundy mb-2 md:mb-0">11:00 AM</div>
+                <!-- Content Panel -->
+                <div class="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm md:ml-12 w-full max-w-3xl group hover:shadow-md transition-shadow duration-300">
+                    <span class="text-xs text-leonberg-gold font-semibold uppercase tracking-widest block mb-2">第二站：皇家宮廷漫步</span>
+                    <h3 class="font-serif text-xl font-bold text-stone-900 mb-3">苦橙園文藝復興巡禮</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                        步行至萊昂貝格城堡旁，走進香氣撲鼻的苦橙園（Pomeranzengarten）。漫步在由修剪整齊的綠植組成的幾何花壇間，坐在噴泉旁，看著梯田式花園與城堡外牆在背景中交織出完美的畫卷。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 3 -->
+            <div class="relative flex flex-col md:flex-row items-start md:items-center">
+                <!-- Marker -->
+                <div class="absolute -left-[11px] md:-left-[11px] w-5 h-5 bg-leonberg-gold rounded-full border-4 border-white shadow-sm"></div>
+                <!-- Time Label -->
+                <div class="md:absolute md:-left-28 font-serif text-lg font-bold text-leonberg-burgundy mb-2 md:mb-0">12:30 PM</div>
+                <!-- Content Panel -->
+                <div class="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm md:ml-12 w-full max-w-3xl group hover:shadow-md transition-shadow duration-300">
+                    <span class="text-xs text-leonberg-gold font-semibold uppercase tracking-widest block mb-2">第三站：南德美味體驗</span>
+                    <h3 class="font-serif text-xl font-bold text-stone-900 mb-3">施瓦本傳統小館午餐</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                        回到老城區，挑選一間當地傳統餐館（如 Brauhaus Sacher）。享用純手工的施瓦本方餃 (Maultaschen)，搭配濃郁洋蔥醬汁、馬鈴薯沙拉與一杯巴登-符騰堡邦自產的精釀啤酒或紅酒。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 4 -->
+            <div class="relative flex flex-col md:flex-row items-start md:items-center">
+                <!-- Marker -->
+                <div class="absolute -left-[11px] md:-left-[11px] w-5 h-5 bg-leonberg-burgundy rounded-full border-4 border-white shadow-sm"></div>
+                <!-- Time Label -->
+                <div class="md:absolute md:-left-28 font-serif text-lg font-bold text-leonberg-burgundy mb-2 md:mb-0">03:00 PM</div>
+                <!-- Content Panel -->
+                <div class="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm md:ml-12 w-full max-w-3xl group hover:shadow-md transition-shadow duration-300">
+                    <span class="text-xs text-leonberg-gold font-semibold uppercase tracking-widest block mb-2">第四站：山頂俯視風光</span>
+                    <h3 class="font-serif text-xl font-bold text-stone-900 mb-3">攀登 Engelbergturm 遠眺山河</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                        下午趁著陽光正好，步行前往恩格爾貝格山。攀登歷史悠久的展望塔。站在塔頂，將萊昂貝格老城、現代城區以及遠方的山野與高速公路交會美景盡收眼底。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 5 -->
+            <div class="relative flex flex-col md:flex-row items-start md:items-center">
+                <!-- Marker -->
+                <div class="absolute -left-[11px] md:-left-[11px] w-5 h-5 bg-leonberg-gold rounded-full border-4 border-white shadow-sm"></div>
+                <!-- Time Label -->
+                <div class="md:absolute md:-left-28 font-serif text-lg font-bold text-leonberg-burgundy mb-2 md:mb-0">06:00 PM</div>
+                <!-- Content Panel -->
+                <div class="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm md:ml-12 w-full max-w-3xl group hover:shadow-md transition-shadow duration-300">
+                    <span class="text-xs text-leonberg-gold font-semibold uppercase tracking-widest block mb-2">第五站：大自然散步與購物</span>
+                    <h3 class="font-serif text-xl font-bold text-stone-900 mb-3">森林熊湖畔散心或 Leo-Center 採購</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                        黃昏時，可前往不遠處清澈的熊湖（Bärensee）森林步道散步、餵鴨子，在湖邊咖啡館觀賞夕陽。或者前往市區的大型購物商場 Leo-Center 採購當地的特產與精巧伴手禮。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-stone-950 text-stone-400 py-12 px-6 border-t border-stone-900">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center space-x-3 text-white">
+                <svg class="w-6 h-6 text-leonberg-gold" viewBox="0 0 100 100" fill="currentColor">
+                    <path d="M52,30 C52,25 48,22 45,25 C42,28 43,33 46,35 C43,37 38,36 36,40 C34,44 38,48 42,46 C39,49 35,53 37,57 C39,61 44,59 47,55 C45,59 43,65 47,67 C51,69 53,64 53,59 C54,63 57,67 61,65 C65,63 64,57 60,54 C63,52 67,49 66,45 C65,41 60,42 57,45 C59,41 61,36 58,33 C55,30 52,32 52,30 Z" />
+                </svg>
+                <span class="font-serif text-lg font-bold tracking-widest">LEONBERG</span>
+            </div>
+            <p class="text-xs text-stone-500 text-center md:text-left">
+                &copy; 2026 萊昂貝格互動導覽系統．本站圖片均為純手工 SVG 及 Canvas 即時繪製，無任何版權爭議。
+            </p>
+            <div class="flex space-x-6 text-xs font-semibold">
+                <a href="#specialties" class="hover:text-leonberg-gold transition-colors duration-200">特產</a>
+                <a href="#architecture" class="hover:text-leonberg-gold transition-colors duration-200">地標</a>
+                <a href="#transport" class="hover:text-leonberg-gold transition-colors duration-200">交通</a>
+                <a href="#itinerary" class="hover:text-leonberg-gold transition-colors duration-200">一日遊</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Interactive Canvas Art Banner ---
+        const canvas = document.getElementById('heroCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        let mouse = { x: -1000, y: -1000, active: false };
+
+        // Handle resizing of header canvas smoothly
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Track mouse position over the hero image
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+            mouse.active = true;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            mouse.active = false;
+        });
+
+        // Stylized Bitter Orange Petal Particle Template
+        class Petal {
+            constructor() {
+                this.reset();
+                // Randomize initial positions across whole canvas
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+            }
+
+            reset() {
+                this.x = -20;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 8 + 4;
+                this.speedX = Math.random() * 1.5 + 0.8;
+                this.speedY = Math.random() * 0.8 - 0.4;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = Math.random() * 0.02 - 0.01;
+                // Petal color shades (white/yellowish orange blossoms)
+                this.color = Math.random() > 0.4 ? 'rgba(255, 253, 240, 0.7)' : 'rgba(212, 175, 55, 0.45)';
+                this.weight = Math.random() * 0.05 + 0.02;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY + this.weight;
+                this.rotation += this.rotationSpeed;
+
+                // Mouse force effect
+                if (mouse.active) {
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const forceRadius = 150;
+                    if (dist < forceRadius) {
+                        const force = (forceRadius - dist) / forceRadius;
+                        // Push away from mouse
+                        this.x += (dx / dist) * force * 12;
+                        this.y += (dy / dist) * force * 12;
+                    }
+                }
+
+                // Recycle petals when they drift off screen
+                if (this.x > canvas.width + 20 || this.y > canvas.height + 20 || this.y < -20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.fillStyle = this.color;
+                
+                // Draw stylized organic petal shape
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.quadraticCurveTo(this.size * 0.5, -this.size, this.size, 0);
+                ctx.quadraticCurveTo(this.size * 0.5, this.size, 0, 0);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+
+        // Initialize particles
+        const particleCount = 75;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Petal());
+        }
+
+        // Stylized skyline representation drawn programmatically
+        function drawLeonbergSkyline() {
+            ctx.fillStyle = 'rgba(15, 10, 12, 0.55)'; // Deep matching silhouette
+            ctx.beginPath();
+            
+            // Base ground / hill curves
+            ctx.moveTo(0, canvas.height);
+            ctx.quadraticCurveTo(canvas.width * 0.25, canvas.height - 40, canvas.width * 0.5, canvas.height - 20);
+            ctx.quadraticCurveTo(canvas.width * 0.75, canvas.height, canvas.width, canvas.height - 30);
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.fill();
+
+            // Stylized landmark silhouette highlights (Engelbergturm on the hill)
+            ctx.save();
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.15)'; // Golden ambient light from bottom
+            ctx.beginPath();
+            ctx.arc(canvas.width * 0.75, canvas.height - 20, 200, 0, Math.PI, true);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // Canvas animation frame loop
+        function animate() {
+            // Draw gradient background directly on canvas to ensure perfect performance
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#0F0D12');
+            gradient.addColorStop(0.6, '#1C1622');
+            gradient.addColorStop(1, '#0C0A0E');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw background skyline
+            drawLeonbergSkyline();
+
+            // Update and draw floating petals
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 2. Interactive Travel Time Calculator ---
+        function calculateTime() {
+            const startPoint = document.getElementById('startPoint').value;
+            const resultDiv = document.getElementById('calcResult');
+            const resultText = document.getElementById('calcText');
+
+            let message = "";
+            switch(startPoint) {
+                case 'stuttgart-hbf':
+                    message = "🚂 搭乘 S-Bahn S6/S60 僅需 22 分鐘即可直達！若開車自駕走 B295，不塞車約需 25 分鐘。";
+                    break;
+                case 'stuttgart-airport':
+                    message = "✈️ 從斯圖加特國際機場出發，自駕經由 A8 高速公路直達萊昂貝格僅需 20 分鐘；搭乘大眾交通工具約需 45 分鐘。";
+                    break;
+                case 'ludwigsburg':
+                    message = "🏰 從鄰近的路德維希堡出發，自駕經由 A81 高速公路約需 18 分鐘；搭乘火車約需 35 分鐘。";
+                    break;
+                case 'karlsruhe':
+                    message = "🚗 從卡爾斯魯厄出發，經由 A8 高速公路向東行駛約 45 分鐘即可抵達 Leonberg 的高速公路樞紐。";
+                    break;
+                default:
+                    message = "請選擇出發起點。";
+            }
+
+            resultText.innerText = message;
+            resultDiv.classList.remove('hidden');
+            
+            // Trigger animation
+            setTimeout(() => {
+                resultDiv.classList.remove('scale-95', 'opacity-0');
+                resultDiv.classList.add('scale-100', 'opacity-100');
+            }, 50);
+        }
+    </script>
+</body>
+</html>
